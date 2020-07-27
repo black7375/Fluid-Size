@@ -20,5 +20,10 @@
   "bugs": {
     "url": "https://github.com/black7375/fluid-size/issues"
   },
-  "homepage": "https://github.com/black7375/fluid-size#readme"
+  "homepage": "https://github.com/black7375/fluid-size#readme",
+  "dependencies": {
+    "include-media": "^1.4.9",
+    "mathsass": "^0.11.0",
+    "sass-unitconverter": "^2.2.2"
+  }
 }
