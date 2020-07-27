@@ -1,0 +1,24 @@
+{
+  "name": "fluid-size",
+  "version": "1.0.0",
+  "description": "A method of fluidly resizing in response to various devices.",
+  "author": "black7375",
+  "license": "MIT",
+  "keywords": [
+    "SASS",
+    "SCSS",
+    "Design",
+    "Breakpoint",
+    "Breakpoints",
+    "Responsive",
+    "media-queries"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/black7375/fluid-size.git"
+  },
+  "bugs": {
+    "url": "https://github.com/black7375/fluid-size/issues"
+  },
+  "homepage": "https://github.com/black7375/fluid-size#readme"
+}
