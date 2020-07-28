@@ -1,0 +1,223 @@
+@import '~include-media-or/dist/include-media';
+@import '~mathsass/dist/math';
+@import '~sass-unitconverter/unitconverter';
+@import 'utils';
+
+// == Fluid Size ===============================================================
+$DEFAULT-BREAK: default !default;
+$DEFAULT-SIZE:  16px    !default;
+
+@function zip-responsive() {
+  @return zip(
+    map-values($screen-distances), map-values($screen-sizes      ),
+    map-values($breakpoints     ), map-values($breakpoints-height)
+  );
+}
+
+@function calc-ppi($screen-width, $screen-height, $screen-size) {
+  @return sqrt(pow($screen-width, 2) + pow($screen-height, 2)) / $screen-size;
+}
+
+@function calc-angle($size) {
+  $size:     num(px($size));
+  $values:   zip-responsive();
+  $smallest: null;
+
+  @each $value in $values {
+    $screen-distance: nth($value, 1) * 100;
+    $screen-size:     nth($value, 2);
+    $screen-width:    num(nth($value, 3));
+    $screen-height:   num(nth($value, 4));
+
+    $ppi: calc-ppi($screen-width, $screen-height, $screen-size);
+    $independent-value: $screen-distance * $ppi;
+    @if (($smallest == null) or ($smallest > $independent-value)) {
+      $smallest: $independent-value;
+    }
+  }
+
+  $angle: $size * 54 / $smallest;
+  $visual-angle: atan($angle) * (10800 / $PI);
+  @return count-round($visual-angle, 2);
+}
+
+@function calc-size($visual-angle) {
+  $values:      zip-responsive();
+  $break-sizes: ();
+
+  @each $value in $values {
+    $screen-distance: nth($value, 1) * 100;
+    $screen-size:     nth($value, 2);
+    $screen-width:    num(nth($value, 3));
+    $screen-height:   num(nth($value, 4));
+
+    $ppi: calc-ppi($screen-width, $screen-height, $screen-size);
+    $angle: tan($PI * $visual-angle / 10800);
+    $size: $screen-distance * $angle * $ppi / 54;
+
+    $break-sizes: append($break-sizes, ($size));
+  }
+
+  @return $break-sizes;
+}
+
+// https://www.madebymike.com.au/writing/fluid-type-calc-examples/
+@function fluid-rate($start-size, $end-size, $min-screen, $max-screen) {
+  @return ($end-size - $start-size) / ($max-screen - $min-screen);
+}
+@function fluid-basic-size($start-size, $min-screen, $rate) {
+  @return $start-size - $rate * $min-screen;
+}
+
+@function fluid-size($start-size, $end-size, $min-screen, $max-screen) {
+  $start-size: em($start-size);
+  $end-size:   em($end-size);
+  $min-screen: em($min-screen);
+  $max-screen: em($max-screen);
+
+  $rate: fluid-rate($start-size, $end-size, $min-screen, $max-screen);
+  $basic-size: fluid-basic-size($start-size, $min-screen, $rate);
+
+  $sign: "+";
+  @if ($basic-size < 0) {
+    $sign: "-";
+    $basic-size: abs($basic-size);
+  }
+  @return calc(#{$rate*100}vw #{$sign} #{$basic-size});
+}
+@function fluid-limit-break($start-size, $end-size, $max-size,
+$min-screen, $max-screen) {
+  $start-size: px($start-size);
+  $end-size:   px($end-size);
+  $max-size:   px($max-size);
+  $min-screen: px($min-screen);
+  $max-screen: px($max-screen);
+
+  $rate: fluid-rate($start-size, $end-size, $min-screen, $max-screen);
+  $basic-size: fluid-basic-size($start-size, $min-screen, $rate);
+
+  @return ($max-size - $basic-size) / $rate;
+}
+
+@mixin fluid-media($property, $sizes, $max-size: null) {
+  $fluid-sizes: to-unit-map($sizes, px);
+  $fluid-breakpoints: map-merge(($DEFAULT-BREAK: 0px), to-unit-map($breakpoints, px));
+  $fluid-breakpoints: map-sort-values($fluid-breakpoints);
+  @if not map-has-key($fluid-sizes, $DEFAULT-BREAK) {
+    $default-map: ($DEFAULT-BREAK: $DEAFULT-SIZE);
+    $fluid-sizes: map-merge($default-map, $fluid-sizes);
+  }
+  $limit-break: null;
+
+  $first-size: 1;
+  $last-size: length($fluid-breakpoints) - 1;
+  @each $i in range($last-size) {
+    $now-key:  map-nth($fluid-breakpoints, $i);
+    $next-key: map-nth($fluid-breakpoints, $i + 1);
+
+    $now-size:   map-get($fluid-sizes, $now-key );
+    $next-size:  map-get($fluid-sizes, $next-key);
+    $now-break:  map-get($fluid-breakpoints, $now-key );
+    $next-break: map-get($fluid-breakpoints, $next-key);
+
+    @if ($max-size != null) {
+      $limit-break: fluid-limit-break($now-size,  $next-size, $max-size,
+      $now-break, $next-break);
+      @if $limit-break < 0 {
+        $limit-break: 0px;
+      }
+
+      $max-size:  px($max-size);
+      $now-size:  if($now-size  > $max-size, $max-size, $now-size );
+      $next-size: if($next-size > $max-size, $max-size, $next-size);
+    }
+
+    $fluid-size: fluid-size($now-size, $next-size, $now-break, $next-break);
+    @if $now-key == $DEFAULT-BREAK and not contain(null 0, $limit-break) {
+      #{$property}: $fluid-size;
+    }
+    @if($max-size != null) and contain($first-size $last-size, $i) {
+      @if $limit-break == 0px {
+        #{$property}: $max-size;
+      }
+      @else {
+        @include media(">=#{$limit-break}") {
+          #{$property}: $max-size;
+        }
+      }
+    }
+    @else if $now-key != $DEFAULT-BREAK {
+      @include media(">=#{$now-key}") {
+        #{$property}: $fluid-size;
+      }
+    }
+  }
+}
+
+@mixin fluid($property, $size, $max-size: null) {
+  $scaled-size: calc-size(calc-angle($size));
+
+  $keys:   join($DEFAULT-BREAK, map-keys($breakpoints));
+  $values: join($size, $scaled-size);
+
+  @include fluid-media($property, to-map($keys, $values), $max-size);
+}
+
+// -- Interface ----------------------------------------------------------------
+// Font
+@mixin font-size($size, $max-size: null) {
+  @include fluid(font-size, $size, $max-size);
+}
+@mixin line-height($size, $max-size: null) {
+  @include fluid(line-height, $size, $max-size);
+}
+@mixin text-indent($size, $max-size: null) {
+  @include fluid(text-indent, $size, $max-size);
+}
+@mixin letter-spacing($size, $max-size: null) {
+  @include fluid(letter-spacing, $size, $max-size);
+}
+@mixin word-spacing($size, $max-size: null) {
+  @include fluid(word-spacing, $size, $max-size);
+}
+
+// Box
+@mixin width($size, $max-size: null) {
+  @include fluid(width, $size, $max-size);
+}
+@mixin height($size, $max-size: null) {
+  @include fluid(height, $size, $max-size);
+}
+@mixin border-width($size, $max-size: null) {
+  @include fluid(border-width, $size, $max-size);
+}
+@mixin margin($size, $max-size: null) {
+  @include fluid(margin, $size, $max-size);
+}
+@mixin margin-top($size, $max-size: null) {
+  @include fluid(margin-top, $size, $max-size);
+}
+@mixin margin-bottom($size, $max-size: null) {
+  @include fluid(margin-bottom, $size, $max-size);
+}
+@mixin margin-left($size, $max-size: null) {
+  @include fluid(margin-left, $size, $max-size);
+}
+@mixin margin-right($size, $max-size: null) {
+  @include fluid(margin-right, $size, $max-size);
+}
+@mixin padding($size, $max-size: null) {
+  @include fluid(padding, $size, $max-size);
+}
+@mixin padding-top($size, $max-size: null) {
+  @include fluid(padding-top, $size, $max-size);
+}
+@mixin padding-bottom($size, $max-size: null) {
+  @include fluid(padding-bottom, $size, $max-size);
+}
+@mixin padding-left($size, $max-size: null) {
+  @include fluid(padding-left, $size, $max-size);
+}
+@mixin padding-right($size, $max-size: null) {
+  @include fluid(padding-right, $size, $max-size);
+}
