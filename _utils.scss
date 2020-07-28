@@ -1,0 +1,172 @@
+@import '~mathsass/dist/math';
+
+// == Utils ====================================================================
+// -- Data Structure -----------------------------------------------------------
+@function range($values) {
+  $iter-num: 0;
+  $range-list: ();
+
+  @if type-of($values) == number {
+    $iter-num: $values;
+  }
+  @else {
+    $iter-num: length($values);
+  }
+
+  @for $i from 1 through $iter-num {
+    $range-list: append($range-list, $i);
+  }
+  @return $range-list;
+}
+
+// https://hugogiraudel.com/2014/04/28/casting-map-into-list/
+@function to-list($value, $keep: 'both') {
+  $keep: if(index('keys' 'values', $keep), $keep, 'both');
+
+  @if type-of($value) == 'map' {
+    $keys: ();
+    $values: ();
+
+    @each $key, $val in $value {
+      $keys: append($keys, $key);
+      $values: append($values, $val);
+    }
+
+    @if $keep == 'keys' {
+      @return $keys;
+    } @else if $keep == 'values' {
+      @return $values;
+    } @else {
+      @return zip($keys, $values);
+    }
+  }
+
+  @return if(type-of($value) != 'list', ($value,), $value);
+}
+
+@function to-map($keys, $values) {
+  $map: ();
+
+  @each $i in range($keys) {
+    $map-value: (nth($keys, $i): nth($values, $i));
+    $map: map-merge($map, $map-value);
+  }
+  @return $map;
+}
+
+@function map-index($map, $key-value, $type: 'key') {
+  @if      $type == 'key'   {
+    @return index(map-keys($map),   $key-value);
+  }
+  @else if $type == 'value' {
+    @return index(map-values($map), $key-value);
+  }
+  @else if $type == 'map'   {
+    @return index($map, to-list($key-value));
+  }
+}
+
+@function map-nth($map, $n, $type: 'key') {
+  @if      $type == 'key'   {
+    @return nth(nth($map, $n), 1);
+  }
+  @else if $type == 'value' {
+    @return nth(nth($map, $n), 2);
+  }
+}
+
+// https://gist.github.com/Jakobud/744b98b629abe018766f6d506a2e92ae
+@function list-sort($list) {
+  $sortedlist: ();
+  @while length($list) > 0 {
+    $value: nth($list,1);
+    @each $item in $list {
+      @if $item < $value {
+        $value: $item;
+      }
+    }
+    $sortedlist: append($sortedlist, $value, 'space');
+    $list: list-remove($list, index($list, $value));
+  }
+  @return $sortedlist;
+}
+
+// https://gist.github.com/Jakobud/a0ac11e80a1de453cd86f0d3fc0a1410
+@function map-sort($map) {
+  $keys: list-sort(map-keys($map));
+  $sortedMap: ();
+  @each $key in $keys {
+    $sortedMap: map-merge($sortedMap, ($key: map-get($map, $key)));
+  }
+  @return $sortedMap;
+}
+
+@function map-sort-values($map) {
+  // Transform map to zipped list
+  $keys: ();
+  $values: ();
+
+  @each $key, $val in $map {
+    $keys: append($keys, $key);
+    $values: append($values, $val);
+  }
+
+  $list: zip($keys, $values);
+
+  $sortedMap: ();
+  @while length($list) > 0 {
+
+    // Find smallest pair
+    $smallestPair: nth($list, 1);
+    @each $pair in $list {
+      $value: nth($pair, 2);
+      $smallestValue: nth($smallestPair, 2);
+      @if $value < $smallestValue {
+        $smallestPair: $pair;
+      }
+    }
+
+    // Add smallest pair to sorted map
+    $key: nth($smallestPair, 1);
+    $value: nth($smallestPair, 2);
+    $sortedMap: map-merge($sortedMap, ($key: $value));
+
+    // Remove from list smallest pair
+    $smallestPairIndex: index($list, $smallestPair);
+    $newList: ();
+    @for $i from 1 through length($list) {
+      @if $i != $smallestPairIndex {
+        $newList: append($newList, nth($list, $i), "space");
+      }
+    }
+    $list: $newList;
+  }
+
+  @return $sortedMap;
+}
+
+@function contain($values, $item, $type: 'key') {
+  @if type-of($values) == 'list' {
+    @return index($values, $item) != null;
+  }
+  @else if type-of($values) == 'map' {
+    @if      $type == 'key' {
+      @return map-has-key($values, $item);
+    }
+    @else if $type == 'value' {
+      @return contain(map-values($values), $item);
+    }
+    @else if $type == 'map' {
+      @return map-index($values, $item, 'map') != null;
+    }
+  }
+}
+
+// -- Math ---------------------------------------------------------------------
+@function count-round($number, $count: 1) {
+  $digit: pow(10, $count - 1);
+
+  $upper: $number * $digit;
+  $round: floor($upper + 0.5);
+  @return $round / $digit;
+}
