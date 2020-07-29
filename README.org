@@ -4,7 +4,7 @@ A method of fluidly resizing in response to various devices. (with SASS)
 
 It is a way to respond to the distance between the eye and the device, the size and resolution of the device.
 
-[[https://user-images.githubusercontent.com/25581533/82766346-d8f63900-9e0d-11ea-9b3b-ceabd7832e4b.png][Fluid-Font-Size]]
+[[https://user-images.githubusercontent.com/25581533/82766346-d8f63900-9e0d-11ea-9b3b-ceabd7832e4b.png]]
 [[https://black7375.github.io/React-RxJS-Todo/][Demo(Simple ToDo App)]]
 
 ** Install
@@ -29,9 +29,8 @@ Just use the name of the API with =@include= !!
 
 Use visual angles to determine the =fit size= (I called) for each device.
 
-[[https://user-images.githubusercontent.com/25581533/82766340-cc71e080-9e0d-11ea-8268-7c965e6544c0.jpeg][View-Distance]]
-source: [[https://uxdesign.cc/legibility-how-to-make-text-convenient-to-read-7f96b84bd8af
-][Legibility: how to make text convenient to read]]
+[[https://user-images.githubusercontent.com/25581533/82766340-cc71e080-9e0d-11ea-8268-7c965e6544c0.jpeg]]
+source: [[https://uxdesign.cc/legibility-how-to-make-text-convenient-to-read-7f96b84bd8af][Legibility: how to make text convenient to read]]
 
 ** Calculation process
 
