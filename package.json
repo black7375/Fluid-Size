@@ -1,7 +1,7 @@
 {
   "name": "fluid-size",
   "version": "1.0.0",
-  "description": "A method of fluidly resizing in response to various devices.",
+  "description": "A method of fluidly resizing in response to various devices. (with SASS)",
   "author": "black7375",
   "license": "MIT",
   "keywords": [
