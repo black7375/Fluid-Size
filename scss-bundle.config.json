@@ -1,0 +1,8 @@
+{
+  "bundlerOptions": {
+    "entryFile": "./_fluid-size.scss",
+    "rootDir": "./",
+    "outFile": "./dist/_fluid-size.scss",
+    "logLevel": "silent"
+  }
+}
