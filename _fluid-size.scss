@@ -181,6 +181,9 @@ $min-screen, $max-screen) {
 @mixin word-spacing($size, $max-size: null) {
   @include fluid(word-spacing, $size, $max-size);
 }
+@mixin tab-size($size, $max-size: null) {
+  @include fluid(tab-size, $size, $max-size);
+}
 
 // Box
 @mixin width($size, $max-size: null) {
