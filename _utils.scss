@@ -162,6 +162,44 @@
   }
 }
 
+@function flatten($list...) {
+  $newList: ();
+  @each $value in $list {
+    @if type-of($value) == 'list' {
+      @each $deepV in $value {
+        $newList: append($newList, $deepV);
+      }
+    }
+    @else {
+      $newList: append($newList, $value);
+    }
+  }
+  @return $newList;
+}
+
+@function map($values, $function, $type: 'value') {
+  @if      type-of($values) == 'list' {
+    $newList: ();
+    @each $value in $values {
+      $newList: append($newList, do($value, $function));
+    }
+    @return $newList;
+  }
+  @else if type-of($values) == 'map'  {
+    $newMap: ();
+    @each $key, $value in $values {
+      $newMap: map-merge($newMap, if($type == 'key',
+                                     (do($key, $function): $value),
+                                     ($key: do($value, $function))
+      ));
+    }
+    @return $newMap;
+  }
+  @else {
+    @return do($values, $function);
+  }
+}
+
 // -- Math ---------------------------------------------------------------------
 @function count-round($number, $count: 1) {
   $digit: pow(10, $count - 1);
@@ -169,4 +207,14 @@
   $upper: $number * $digit;
   $round: floor($upper + 0.5);
   @return $round / $digit;
+}
+
+// -- Other --------------------------------------------------------------------
+@function do($value, $functions...) {
+  $result: $value;
+  $functions: flatten($functions...);
+  @each $function in $functions {
+    $result: call($function, $result);
+  }
+  @return $result;
 }
