@@ -51,15 +51,18 @@ body {
   @include font-size(16px);
 }
 
-// Tentative Result
-/*
-Default:            16px;
-Phone:        about 18.75px;
-Tablet:       about 16px;
-Laptop:       about 16.73px;
-Desktop:      about 17.56px;
-High-Desktop: about 20.82px;
-*/
+/** Tentative Result
+ * INFO
+ * Basis Angle: 60 arc min
+ *
+ * SIZES
+ * Default:            16px;
+ * Phone:        about 18.75px;
+ * Tablet:       about 16px;
+ * Laptop:       about 16.73px;
+ * Desktop:      about 17.56px;
+ * High-Desktop: about 20.82px;
+ */
 
 // Result
 @media (min-width: 480px) { // Phone
