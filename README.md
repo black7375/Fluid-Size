@@ -1,12 +1,18 @@
 # Fluid Size
 
-A method of fluidly resizing in response to various devices. (with SASS)
+:desktop_computer: :computer::iphone: A method of fluidly resizing in response to various devices. (with SASS) :revolving_hearts: :eyes:
 
 It is a way to respond to the distance between the eye and the device, the size and resolution of the device.
 
 ![fluid-font-size](https://user-images.githubusercontent.com/25581533/82766346-d8f63900-9e0d-11ea-9b3b-ceabd7832e4b.png)
 - [Demo(Codepen)](https://codepen.io/black7375/pen/xxZoyow)
 - [Demo(Simple ToDo App)](https://black7375.github.io/React-RxJS-Todo/)
+
+## Advantages
+- Easy
+- Provides the `fit size` for each device
+- Resized `fluidly` between each device
+- Compatible with [include-media](https://github.com/eduardoboucas/include-media)
 
 ## How to Use?
 
@@ -36,32 +42,42 @@ Just use the name of the [Wiki:API](https://github.com/black7375/fluid-size/wiki
 ```scss
  @include font-size($size-value, $max-size-value);
 ```
- 
+
  **Converted Sample**
 
 ```scss
- // Code
+// Code
 body {
   @include font-size(16px);
 }
- 
- // Result
- @media (min-width: 480px) {
+
+// Tentative Result
+/*
+Default:            16px;
+Phone:        about 18.75px;
+Tablet:       about 16px;
+Laptop:       about 16.73px;
+Desktop:      about 17.56px;
+High-Desktop: about 20.82px;
+*/
+
+// Result
+@media (min-width: 480px) { // Phone
   body {
     font-size: calc(-0.9504790795vw + 1.4567984055em);
   }
 }
-@media (min-width: 768px) {
+@media (min-width: 768px) { // Tablet
   body {
     font-size: calc(0.1404102228vw + 0.9331715404em);
   }
 }
-@media (min-width: 1280px) {
+@media (min-width: 1280px) { // Laptop
   body {
     font-size: calc(0.1306874648vw + 0.9409497468em);
   }
 }
-@media (min-width: 1920px) {
+@media (min-width: 1920px) { // Desktop
   body {
     font-size: calc(0.5082290299vw + 0.4878998687em);
   }
