@@ -1,0 +1,54 @@
+// == Break Points =============================================================
+$high-desktop-width:  2560px !default;
+$high-desktop-height: 1440px !default;
+
+$desktop-width:  1920px !default;
+$desktop-height: 1080px !default;
+
+$laptop-width:  1280px !default;
+$laptop-height:  720px !default;
+
+$tablet-width:   768px !default;
+$tablet-height: 1024px !default;
+
+$phone-width:  480px !default;
+$phone-height: 854px !default;
+
+$breakpoints: (        // px
+  phone:        $phone-width,
+  tablet:       $tablet-width,
+  laptop:       $laptop-width,
+  desktop:      $desktop-width,
+  high-desktop: $high-desktop-width
+) !default;
+
+$breakpoints-height: ( // px
+  phone:        $phone-height,
+  tablet:       $tablet-height,
+  laptop:       $laptop-height,
+  desktop:      $desktop-height,
+  high-desktop: $high-desktop-height
+) !default;
+
+$screen-sizes: (       // inch
+  phone:        5,
+  tablet:       10.2,
+  laptop:       14,
+  desktop:      24,
+  high-desktop: 27
+) !default;
+
+$screen-distances: (   // 10cm
+  phone:        3,
+  tablet:       4,
+  laptop:       5,
+  desktop:      6,
+  high-desktop: 6
+) !default;
+
+// Alias
+$high-desktop: $high-desktop-width !default;
+$desktop:      $desktop-width      !default;
+$laptop:       $laptop-width       !default;
+$tablet:       $tablet-width       !default;
+$phone:        $phone-width        !default;

@@ -1,6 +1,7 @@
 @import '~include-media/dist/include-media';
 @import '~mathsass/dist/math';
 @import '~sass-unitconverter/unitconverter';
+@import 'break-points';
 @import 'utils';
 
 // == Fluid Size ===============================================================
@@ -179,6 +180,9 @@ $min-screen, $max-screen) {
 }
 @mixin word-spacing($size, $max-size: null) {
   @include fluid(word-spacing, $size, $max-size);
+}
+@mixin tab-size($size, $max-size: null) {
+  @include fluid(tab-size, $size, $max-size);
 }
 
 // Box
