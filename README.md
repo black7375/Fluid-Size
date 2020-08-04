@@ -1,11 +1,13 @@
 # Fluid Size
 
+![Logo](https://user-images.githubusercontent.com/25581533/89294723-6d231e80-d64f-11ea-8a67-9333451f467a.png)
+
 :desktop_computer: :computer::iphone: A method of fluidly resizing in response to various devices. (with SASS) :revolving_hearts: :eyes:
 
 It is a way to respond to the distance between the eye and the device, the size and resolution of the device.
 
 ![fluid-font-size](https://user-images.githubusercontent.com/25581533/82766346-d8f63900-9e0d-11ea-9b3b-ceabd7832e4b.png)
-- [Demo(Codepen)](https://codepen.io/black7375/pen/xxZoyow)
+- [Demo(Codepen)](https://codepen.io/black7375/pen/xxZoyow?editors=1100)
 - [Demo(Simple ToDo App)](https://black7375.github.io/React-RxJS-Todo/)
 
 ## Advantages
@@ -37,7 +39,7 @@ npm install @black7375/fluid-size
 
 ### Usage
 
-Just use the name of the [Wiki:API](https://github.com/black7375/fluid-size/wiki/API) with `@include`!!
+Just use the name of the [API](https://github.com/black7375/fluid-size/wiki/API) with `@include`!!
 
 ```scss
  @include font-size($size-value, $max-size-value);
