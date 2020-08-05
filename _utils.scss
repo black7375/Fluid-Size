@@ -63,6 +63,10 @@
   @return $map;
 }
 
+@function empty-map($x: x) {
+  @return map-remove(($x:$x), $x);
+}
+
 @function map-index($map, $key-value, $type: 'key') {
   @if      $type == 'key'   {
     @return index(map-keys($map),   $key-value);

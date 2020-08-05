@@ -3,6 +3,7 @@
 @import '~mathsass/dist/math';
 @import '~sass-unitconverter/unitconverter';
 @import 'utils';
+@import 'options';
 
 // == Fluid Size ===============================================================
 $DEFAULT-BREAK: default !default;
@@ -123,7 +124,7 @@ $DEFAULT-SIZE:  16px    !default;
 }
 
 @function fluid-limit-break($start-size, $end-size, $max-size,
-$min-screen, $max-screen) {
+                            $min-screen, $max-screen) {
   $start-size: px($start-size);
   $end-size:   px($end-size);
   $max-size:   px($max-size);
@@ -137,7 +138,7 @@ $min-screen, $max-screen) {
   @return if($limit-break <= 0px, 0px, $limit-break);
 }
 @function fluid-limit-breaks($now-size, $next-size, $max-size,
-$now-break, $next-break) {
+                             $now-break, $next-break) {
   @if not (is-list($now-size) or is-list($next-size)) {
     @return fluid-limit-break($now-size, $next-size, $max-size,
     $now-break, $next-break);
@@ -155,8 +156,7 @@ $now-break, $next-break) {
   @return min($limit-breaks...);
 }
 
-
-@mixin fluid-media($property, $sizes, $max-size: null) {
+@mixin fluid-media($property, $sizes, $options: empty-map()) {
   $fluid-sizes: to-unit-data($sizes, px);
   $fluid-breakpoints: map-merge(($DEFAULT-BREAK: 0px), to-unit-map($breakpoints, px));
   $fluid-breakpoints: map-sort-values($fluid-breakpoints);
@@ -177,6 +177,7 @@ $now-break, $next-break) {
     $now-break:  map-get($fluid-breakpoints, $now-key );
     $next-break: map-get($fluid-breakpoints, $next-key);
 
+    $max-size: get-option($options, max);
     @if ($max-size != null) {
       $limit-break: fluid-limit-breaks($now-size, $next-size, $max-size,
       $now-break, $next-break);
@@ -207,13 +208,16 @@ $now-break, $next-break) {
   }
 }
 
-@mixin fluid($property, $size, $max-size: null) {
+@mixin fluid($property, $size, $options: empty-map()) {
+  @if not is-map($options) {
+    $options: (max-size: $options);
+  }
   $fit-sizes: fit-size($size);
 
   $keys:   join($DEFAULT-BREAK, map-keys($breakpoints));
   $values: join(($size,), $fit-sizes);
 
-  @include fluid-media($property, to-map($keys, $values), $max-size);
+  @include fluid-media($property, to-map($keys, $values), $options);
 }
 
 // -- Interface ----------------------------------------------------------------
