@@ -1,4 +1,5 @@
 @import '~mathsass/dist/math';
+@import '~sass-unitconverter/unitconverter';
 
 // == Utils ====================================================================
 // -- Data Structure -----------------------------------------------------------
@@ -17,6 +18,14 @@
     $range-list: append($range-list, $i);
   }
   @return $range-list;
+}
+
+@function list($args...) {
+  $list: ();
+  @each $arg in $args {
+    $list: append($list, $arg);
+  }
+  @return $list;
 }
 
 // https://hugogiraudel.com/2014/04/28/casting-map-into-list/
@@ -177,11 +186,14 @@
   @return $newList;
 }
 
-@function map($values, $function, $type: 'value') {
+@function map($values, $function, $type: 'value', $separator: auto) {
   @if      type-of($values) == 'list' {
     $newList: ();
     @each $value in $values {
-      $newList: append($newList, do($value, $function));
+      $newList: append($newList, if($type == 'list',
+                                   do-list($value, $function),
+                                   do($value, $function)),
+                       $separator);
     }
     @return $newList;
   }
@@ -217,4 +229,51 @@
     $result: call($function, $result);
   }
   @return $result;
+}
+
+@function do-list($value, $functions...) {
+  $result: $value;
+  $functions: flatten($functions...);
+  @each $function in $functions {
+    $result: call($function, $result...);
+  }
+  @return $result;
+}
+
+@function to-unit-converted($value, $unit) {
+  @return if(is-num($value, false),
+  to-unit($value, $unit), to-unit-data($value, $unit));
+}
+
+@function to-unit-data($data, $unit) {
+  $new-data: ();
+  @if      is-list($data) {
+    @each $value in $data {
+      $converted: to-unit-converted($value, $unit);
+      $new-data: append($new-data, $converted);
+    }
+  }
+  @else if is-map($data) {
+    @each $key, $value in $data {
+      $converted: to-unit-converted($value, $unit);
+      $new-data: map-merge($new-data, ($key: $converted));
+    }
+  }
+  @else {
+    @return if(is-num($data, false), to-unit($data, $unit), $data);
+  }
+  @return $new-data;
+}
+
+@function max-size($size, $max-size) {
+  @if not is-list($size) {
+    @return max($size, $max-size);
+  }
+
+  $new-size: ();
+  @each $each-size in $size {
+    $new-size: append($new-size, if(is-len($each-size),
+    max($each-size, $max-size), $each-size));
+  }
+  @return $new-size;
 }
