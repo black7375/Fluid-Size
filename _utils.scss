@@ -7,7 +7,7 @@
   $iter-num: 0;
   $range-list: ();
 
-  @if type-of($values) == number {
+  @if is-num($values) {
     $iter-num: $values;
   }
   @else {
@@ -32,7 +32,7 @@
 @function to-list($value, $keep: 'both') {
   $keep: if(index('keys' 'values', $keep), $keep, 'both');
 
-  @if type-of($value) == 'map' {
+  @if is-map($value) {
     $keys: ();
     $values: ();
 
@@ -155,10 +155,10 @@
 }
 
 @function contain($values, $item, $type: 'key') {
-  @if type-of($values) == 'list' {
+  @if      is-list($values) {
     @return index($values, $item) != null;
   }
-  @else if type-of($values) == 'map' {
+  @else if is-map($values) {
     @if      $type == 'key' {
       @return map-has-key($values, $item);
     }
@@ -174,7 +174,7 @@
 @function flatten($list...) {
   $newList: ();
   @each $value in $list {
-    @if type-of($value) == 'list' {
+    @if is-list($value) {
       @each $deepV in $value {
         $newList: append($newList, $deepV);
       }
@@ -187,7 +187,7 @@
 }
 
 @function map($values, $function, $type: 'value', $separator: auto) {
-  @if      type-of($values) == 'list' {
+  @if      is-list($values) {
     $newList: ();
     @each $value in $values {
       $newList: append($newList, if($type == 'list',
@@ -197,7 +197,7 @@
     }
     @return $newList;
   }
-  @else if type-of($values) == 'map'  {
+  @else if is-map($values)  {
     $newMap: ();
     @each $key, $value in $values {
       $newMap: map-merge($newMap, if($type == 'key',
