@@ -179,9 +179,9 @@ $DEFAULT-SIZE:  16px    !default;
     $now-size:  to-unit-data($now-size,  $fluid-unit);
     $next-size: to-unit-data($next-size, $fluid-unit);
     $max-size:  to-unit-data($max-size,  $fluid-unit);
-    @if ($max-size != null) {
+    @if not is-null($max-size) {
       $limit-break: fluid-limit-breaks($now-size, $next-size, $max-size,
-      $now-break, $next-break);
+                                       $now-break, $next-break);
       $now-size:  max-size($now-size,  $max-size);
       $next-size: max-size($next-size, $max-size);
     }
@@ -190,17 +190,8 @@ $DEFAULT-SIZE:  16px    !default;
     @if $now-key == $DEFAULT-BREAK and not contain(null 0, $limit-break) {
       #{$property}: $fluid-size;
     }
-    @if($max-size != null) and contain($first-size $last-size, $i) {
-      @if $limit-break == 0px {
-        #{$property}: $max-size;
-      }
-      @else {
-        @include media(">=#{$limit-break}") {
-          #{$property}: $max-size;
-        }
-      }
-    }
-    @else if $now-key != $DEFAULT-BREAK {
+
+    @if $now-key != $DEFAULT-BREAK {
       @include media(">=#{$now-key}") {
         #{$property}: $fluid-size;
       }

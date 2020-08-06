@@ -269,15 +269,18 @@
   @return $new-data;
 }
 
+@function limit-size($size, $max-size) {
+  @return if($size > $max-size, $max-size, $size);
+}
+
 @function max-size($size, $max-size) {
   @if not is-list($size) {
-    @return max($size, $max-size);
+    @return limit-size($size, $max-size);
   }
 
   $new-size: ();
   @each $each-size in $size {
-    $new-size: append($new-size, if(is-len($each-size),
-    max($each-size, $max-size), $each-size));
+    $new-size: append($new-size, if(is-len($each-size), limit-size($each-size, $max-size), $each-size));
   }
   @return $new-size;
 }
