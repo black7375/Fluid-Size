@@ -1,0 +1,70 @@
+@import '~sass-unitconverter/unitconverter';
+
+// == Optionss =================================================================
+// Global Options
+$fls-max:  null !default;
+$fls-unit: each !default;
+
+$global-options: (
+  max-size: $fls-max,
+  unit:     $fls-unit,
+);
+
+// Mapping with Scoped Options
+// Scoped Name. Global Name
+$fluid-options: (
+   max:         max-size,
+   max-size:    max-size,
+   unit:        unit,
+);
+
+@function scoped-convert($scoped-options) {
+  @if length($scoped-options) == 0 {
+    @return ();
+  }
+
+  $result: ();
+  @each $key, $value in $scoped-options {
+    $global-key: map-get($fluid-options, $key);
+    $result:     map-merge($result, ($global-key: $value));
+  }
+  @return $result;
+}
+
+@function name-convert($name) {
+  $result: ();
+  @if is-list($name) {
+    @each $key in $name {
+      $global-key: map-get($fluid-options, $key);
+      $result: append($result, $global-key);
+    }
+  }
+  @else {
+    $result: map-get($fluid-options, $name);
+  }
+  @return $result;
+}
+
+@function get-option($options: (), $name: all) {
+  $scoped: scoped-convert($options);
+  $result: ();
+
+  @if $name == all {
+    $result: map-merge($global-options, $scoped);
+  }
+  @else {
+    $name: name-convert($name);
+
+    @if is-list($name) {
+      @each $option in $name {
+        $value:  map-get($scoped, $option);
+        $result: append($result, if(is-null($value), map-get($global-options, $option), $value));
+      }
+    }
+    @else {
+      $value:  map-get($scoped, $name);
+      $result: if(is-null($value), map-get($global-options, $name), $value);
+    }
+  }
+  @return $result;
+}
