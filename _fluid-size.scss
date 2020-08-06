@@ -89,11 +89,6 @@ $DEFAULT-SIZE:  16px    !default;
 }
 
 @function fluid-size($start-size, $end-size, $min-screen, $max-screen) {
-  $start-size: em($start-size);
-  $end-size:   em($end-size);
-  $min-screen: em($min-screen);
-  $max-screen: em($max-screen);
-
   $rate: fluid-rate($start-size, $end-size, $min-screen, $max-screen);
   $basic-size: fluid-basic-size($start-size, $min-screen, $rate);
 
@@ -177,11 +172,16 @@ $DEFAULT-SIZE:  16px    !default;
     $now-break:  map-get($fluid-breakpoints, $now-key );
     $next-break: map-get($fluid-breakpoints, $next-key);
 
-    $max-size: get-option($options, max);
+    // Apply Options
+    $fluid-unit: get-option($options, unit);
+    $max-size:   get-option($options,  max);
+
+    $now-size:  to-unit-data($now-size,  $fluid-unit);
+    $next-size: to-unit-data($next-size, $fluid-unit);
+    $max-size:  to-unit-data($max-size,  $fluid-unit);
     @if ($max-size != null) {
       $limit-break: fluid-limit-breaks($now-size, $next-size, $max-size,
       $now-break, $next-break);
-      $max-size:  px($max-size);
       $now-size:  max-size($now-size,  $max-size);
       $next-size: max-size($next-size, $max-size);
     }
@@ -208,10 +208,17 @@ $DEFAULT-SIZE:  16px    !default;
   }
 }
 
-@mixin fluid($property, $size, $options: empty-map()) {
+@mixin fluid($property, $size, $options: empty-map(), $type: 'font') {
   @if not is-map($options) {
     $options: (max-size: $options);
   }
+  @if      get-option($options, unit) == each and $type == 'font' {
+    $options: map-merge($options, (unit: em));
+  }
+  @else if get-option($options, unit) == each and $type ==  'box' {
+    $options: map-merge($options, (unit: px));
+  }
+
   $fit-sizes: fit-size($size);
 
   $keys:   join($DEFAULT-BREAK, map-keys($breakpoints));
