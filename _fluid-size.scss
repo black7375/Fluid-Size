@@ -187,8 +187,8 @@ $DEFAULT-SIZE:  16px    !default;
     }
 
     $fluid-size: fluid-sizes($now-size, $next-size, $now-break, $next-break);
-    @if $now-key == $DEFAULT-BREAK and not contain(null 0, $limit-break) {
-      #{$property}: $fluid-size;
+    @if $now-key == $DEFAULT-BREAK {
+      #{$property}: $now-size;
     }
 
     @if $now-key != $DEFAULT-BREAK {
