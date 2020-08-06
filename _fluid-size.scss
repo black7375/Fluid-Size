@@ -229,62 +229,62 @@ $DEFAULT-SIZE:  16px    !default;
 
 // -- Interface ----------------------------------------------------------------
 // Font
-@mixin font-size($size, $max-size: null) {
-  @include fluid(font-size, $size, $max-size);
+@mixin font-size($size, $options: empty-map()) {
+  @include fluid(font-size, $size, $options);
 }
-@mixin line-height($size, $max-size: null) {
-  @include fluid(line-height, $size, $max-size);
+@mixin line-height($size, $options: empty-map()) {
+  @include fluid(line-height, $size, $options);
 }
-@mixin text-indent($size, $max-size: null) {
-  @include fluid(text-indent, $size, $max-size);
+@mixin text-indent($size, $options: empty-map()) {
+  @include fluid(text-indent, $size, $options);
 }
-@mixin letter-spacing($size, $max-size: null) {
-  @include fluid(letter-spacing, $size, $max-size);
+@mixin letter-spacing($size, $options: empty-map()) {
+  @include fluid(letter-spacing, $size, $options);
 }
-@mixin word-spacing($size, $max-size: null) {
-  @include fluid(word-spacing, $size, $max-size);
+@mixin word-spacing($size, $options: empty-map()) {
+  @include fluid(word-spacing, $size, $options);
 }
-@mixin tab-size($size, $max-size: null) {
-  @include fluid(tab-size, $size, $max-size);
+@mixin tab-size($size, $options: empty-map()) {
+  @include fluid(tab-size, $size, $options);
 }
 
 // Box
-@mixin width($size, $max-size: null) {
-  @include fluid(width, $size, $max-size);
+@mixin width($size, $options: empty-map()) {
+  @include fluid(width, $size, $options, 'box');
 }
-@mixin height($size, $max-size: null) {
-  @include fluid(height, $size, $max-size);
+@mixin height($size, $options: empty-map()) {
+  @include fluid(height, $size, $options, 'box');
 }
-@mixin border-width($size, $max-size: null) {
-  @include fluid(border-width, $size, $max-size);
+@mixin border-width($size, $options: empty-map()) {
+  @include fluid(border-width, $size, $options, 'box');
 }
-@mixin margin($size, $max-size: null) {
-  @include fluid(margin, $size, $max-size);
+@mixin margin($size, $options: empty-map()) {
+  @include fluid(margin, $size, $options, 'box');
 }
-@mixin margin-top($size, $max-size: null) {
-  @include fluid(margin-top, $size, $max-size);
+@mixin margin-top($size, $options: empty-map()) {
+  @include fluid(margin-top, $size, $options, 'box');
 }
-@mixin margin-bottom($size, $max-size: null) {
-  @include fluid(margin-bottom, $size, $max-size);
+@mixin margin-bottom($size, $options: empty-map()) {
+  @include fluid(margin-bottom, $size, $options, 'box');
 }
-@mixin margin-left($size, $max-size: null) {
-  @include fluid(margin-left, $size, $max-size);
+@mixin margin-left($size, $options: empty-map()) {
+  @include fluid(margin-left, $size, $options, 'box');
 }
-@mixin margin-right($size, $max-size: null) {
-  @include fluid(margin-right, $size, $max-size);
+@mixin margin-right($size, $options: empty-map()) {
+  @include fluid(margin-right, $size, $options, 'box');
 }
-@mixin padding($size, $max-size: null) {
-  @include fluid(padding, $size, $max-size);
+@mixin padding($size, $options: empty-map()) {
+  @include fluid(padding, $size, $options, 'box');
 }
-@mixin padding-top($size, $max-size: null) {
-  @include fluid(padding-top, $size, $max-size);
+@mixin padding-top($size, $options: empty-map()) {
+  @include fluid(padding-top, $size, $options, 'box');
 }
-@mixin padding-bottom($size, $max-size: null) {
-  @include fluid(padding-bottom, $size, $max-size);
+@mixin padding-bottom($size, $options: empty-map()) {
+  @include fluid(padding-bottom, $size, $options, 'box');
 }
-@mixin padding-left($size, $max-size: null) {
-  @include fluid(padding-left, $size, $max-size);
+@mixin padding-left($size, $options: empty-map()) {
+  @include fluid(padding-left, $size, $options, 'box');
 }
-@mixin padding-right($size, $max-size: null) {
-  @include fluid(padding-right, $size, $max-size);
+@mixin padding-right($size, $options: empty-map()) {
+  @include fluid(padding-right, $size, $options, 'box');
 }
