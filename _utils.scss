@@ -28,6 +28,43 @@
   @return $list;
 }
 
+// https://hugogiraudel.com/2013/08/08/advanced-sass-list-functions/
+@function replace-nth($list, $index, $value) {
+  $result: null;
+
+  @if type-of($index) != number {
+    @warn "$index: #{quote($index)} is not a number for `replace-nth`.";
+  } @else if $index == 0 {
+    @warn "List index 0 must be a non-zero integer for `replace-nth`.";
+  } @else if abs($index) > length($list) {
+    @warn "List index is #{$index} but list is only #{length($list)} item long for `replace-nth`.";
+  } @else {
+    $result: ();
+    $index: if($index < 0, length($list) + $index + 1, $index);
+
+    @for $i from 1 through length($list) {
+      @if $i == $index {
+        $result: append($result, $value);
+      } @else {
+        $result: append($result, nth($list, $i));
+      }
+    }
+  }
+
+  @return $result;
+}
+
+// https://gist.github.com/Jakobud/ec056b52f3673cc369dc97f2c2428424
+@function list-remove($list, $index) {
+  $newList: ();
+  @for $i from 1 through length($list) {
+    @if $i != $index {
+      $newList: append($newList, nth($list,$i), 'space');
+    }
+  }
+  @return $newList;
+}
+
 // https://hugogiraudel.com/2014/04/28/casting-map-into-list/
 @function to-list($value, $keep: 'both') {
   $keep: if(index('keys' 'values', $keep), $keep, 'both');
@@ -102,6 +139,17 @@
     $list: list-remove($list, index($list, $value));
   }
   @return $sortedlist;
+}
+
+@function list-sort-index($list) {
+  $sortedMap: ();
+  @each $i in range($list) {
+    $value: nth($list, $i);
+    $sortedMap: map-merge($sortedMap, ($value: $i));
+  }
+
+  $sortedMap: map-sort($sortedMap);
+  @return map-values($sortedMap);
 }
 
 // https://gist.github.com/Jakobud/a0ac11e80a1de453cd86f0d3fc0a1410

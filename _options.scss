@@ -2,20 +2,23 @@
 
 // == Optionss =================================================================
 // Global Options
-$fls-max:  null !default;
-$fls-unit: each !default;
+$fls-unit:  each !default; // each or units(Ex. px, em, rem, ...)
+$fls-max:   null !default; // null or length(Ex. 20px, 20pt, ...)
+$fls-limit: size !default; // size or break
 
 $global-options: (
-  max-size: $fls-max,
   unit:     $fls-unit,
+  max-size: $fls-max,
+  limit:    $fls-limit,
 );
 
 // Mapping with Scoped Options
 // Scoped Name. Global Name
 $fluid-options: (
+   unit:        unit,
    max:         max-size,
    max-size:    max-size,
-   unit:        unit,
+   limit:       limit,
 );
 
 @function scoped-convert($scoped-options) {
