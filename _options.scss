@@ -6,11 +6,14 @@ $fls-unit:  each !default; // each or units(Ex. px, em, rem, ...)
 $fls-max:   null !default; // null or length(Ex. 20px, 20pt, ...)
 $fls-limit: size !default; // size or break
 
-$global-options: (
-  unit:     $fls-unit,
-  max-size: $fls-max,
-  limit:    $fls-limit,
-);
+@function global-options() {
+  $global-options: (
+    unit:     $fls-unit,
+    max-size: $fls-max,
+    limit:    $fls-limit,
+  );
+  @return $global-options;
+}
 
 // Mapping with Scoped Options
 // Scoped Name. Global Name
@@ -53,7 +56,7 @@ $fluid-options: (
   $result: ();
 
   @if $name == all {
-    $result: map-merge($global-options, $scoped);
+    $result: map-merge(global-options(), $scoped);
   }
   @else {
     $name: name-convert($name);
@@ -61,12 +64,12 @@ $fluid-options: (
     @if is-list($name) {
       @each $option in $name {
         $value:  map-get($scoped, $option);
-        $result: append($result, if(is-null($value), map-get($global-options, $option), $value));
+        $result: append($result, if(is-null($value), map-get(global-options(), $option), $value));
       }
     }
     @else {
       $value:  map-get($scoped, $name);
-      $result: if(is-null($value), map-get($global-options, $name), $value);
+      $result: if(is-null($value), map-get(global-options(), $name), $value);
     }
   }
   @return $result;

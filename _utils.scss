@@ -319,20 +319,26 @@
   @return $new-data;
 }
 
-@function max-size($size, $max-size) {
-  @if not is-list($size) {
-    @return limit-size($size, $max-size);
+@function limit-size($size, $max-size) {
+  @return if($size > $max-size, $max-size, $size);
+}
+
+@function max-size($sizes, $max-size) {
+  $sizes:    to-unit-data($sizes,    px);
+  $max-size: to-unit-data($max-size, px);
+  @if not is-list($sizes) {
+    @return limit-size($sizes, $max-size);
   }
 
-  $new-size: ();
-  @each $each-size in $size {
-    $new-size: append($new-size, if(is-len($each-size), limit-size($each-size, $max-size), $each-size));
+  $new-sizes: ();
+  @each $size in $sizes {
+    $new-sizes: append($new-sizes, if(is-len($size), limit-size($size, $max-size), $size));
   }
-  @return $new-size;
+  @return $new-sizes;
 }
 
 @function size-break($function, $fluid-unit, $now-size, $next-size,
-                     $now-break, $next-break, $max-size: null) {
+$now-break, $next-break, $max-size: null) {
   $now-size:   to-unit-data($now-size,   $fluid-unit);
   $next-size:  to-unit-data($next-size,  $fluid-unit);
   $now-break:  to-unit-data($now-break,  $fluid-unit);

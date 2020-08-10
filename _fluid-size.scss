@@ -111,7 +111,7 @@ $DEFAULT-SIZE:  16px    !default;
   $basic-size: fluid-basic-size($start-size, $min-screen, $rate);
 
   $limit-break: ($max-size - $basic-size) / $rate;
-  $limit-break: count-round($limit-break, 0);
+  $limit-break: count-round($limit-break, 1);
   @return if($limit-break <= 0px, 0px, $limit-break);
 }
 @function fluid-limit-breaks($now-size, $next-size, $max-size,
@@ -260,6 +260,7 @@ $DEFAULT-SIZE:  16px    !default;
     $limit:      get-option($options, limit);
 
     $limit-breaks: null;
+    $limit-types:  null;
     @if not is-null($max-size) {
       $max-size:   to-unit-data($max-size, px);
       @if $limit == 'size' and $limit != 'break' {
