@@ -241,11 +241,13 @@
 @function map($values, $function, $type: 'value', $separator: auto) {
   @if      is-list($values) {
     $newList: ();
-    @each $value in $values {
-      $newList: append($newList, if($type == 'list',
-                                   do-list($value, $function),
-                                   do($value, $function)),
-                       $separator);
+    @if      $type == 'list' {
+      $newList: do-list($values, $function);
+    }
+    @else if $type == 'value' {
+      @each $value in $values {
+        $newList: append($newList, do($value, $function), $separator);
+      }
     }
     @return $newList;
   }
@@ -317,10 +319,6 @@
   @return $new-data;
 }
 
-@function limit-size($size, $max-size) {
-  @return if($size > $max-size, $max-size, $size);
-}
-
 @function max-size($size, $max-size) {
   @if not is-list($size) {
     @return limit-size($size, $max-size);
@@ -331,4 +329,39 @@
     $new-size: append($new-size, if(is-len($each-size), limit-size($each-size, $max-size), $each-size));
   }
   @return $new-size;
+}
+
+@function size-break($function, $fluid-unit, $now-size, $next-size,
+                     $now-break, $next-break, $max-size: null) {
+  $now-size:   to-unit-data($now-size,   $fluid-unit);
+  $next-size:  to-unit-data($next-size,  $fluid-unit);
+  $now-break:  to-unit-data($now-break,  $fluid-unit);
+  $next-break: to-unit-data($next-break, $fluid-unit);
+  $max-size:   to-unit-data($max-size,   $fluid-unit);
+
+  $check-function: $function == 'fluid-size';
+  $args: if($check-function,
+  list($now-size, $next-size, $now-break, $next-break),
+  list($now-size, $next-size, $max-size, $now-break, $next-break));
+
+  @if not (is-list($now-size) or is-list($next-size)) {
+    @return map($args, $function, 'list');
+  }
+
+  $results: ();
+  $each-sizes: zip($now-size, $next-size);
+  @each $start-size, $end-size in $each-sizes {
+    $result: null;
+    @if is-len($start-size) and is-len($end-size) {
+      $args: replace-nth($args, 1, $start-size);
+      $args: replace-nth($args, 2, $end-size  );
+
+      $result: map($args, $function, 'list');
+    }
+    @else {
+      $result: if($check-function, $start-size, $next-break);
+    }
+    $results: append($results, $result);
+  }
+  @return $results;
 }
