@@ -1,0 +1,76 @@
+@import '~sass-unitconverter/unitconverter';
+
+// == Options =================================================================
+// Global Options
+$fls-unit:  each !default; // each or units(Ex. px, em, rem, ...)
+$fls-max:   null !default; // null or length(Ex. 20px, 20pt, ...)
+$fls-limit: size !default; // size or break
+
+@function global-options() {
+  $global-options: (
+    unit:     $fls-unit,
+    max-size: $fls-max,
+    limit:    $fls-limit,
+  );
+  @return $global-options;
+}
+
+// Mapping with Scoped Options
+// Scoped Name. Global Name
+$fluid-options: (
+   unit:        unit,
+   max:         max-size,
+   max-size:    max-size,
+   limit:       limit,
+);
+
+@function scoped-convert($scoped-options) {
+  @if length($scoped-options) == 0 {
+    @return ();
+  }
+
+  $result: ();
+  @each $key, $value in $scoped-options {
+    $global-key: map-get($fluid-options, $key);
+    $result:     map-merge($result, ($global-key: $value));
+  }
+  @return $result;
+}
+
+@function name-convert($name) {
+  $result: ();
+  @if is-list($name) {
+    @each $key in $name {
+      $global-key: map-get($fluid-options, $key);
+      $result: append($result, $global-key);
+    }
+  }
+  @else {
+    $result: map-get($fluid-options, $name);
+  }
+  @return $result;
+}
+
+@function get-option($options: (), $name: all) {
+  $scoped: scoped-convert($options);
+  $result: ();
+
+  @if $name == all {
+    $result: map-merge(global-options(), $scoped);
+  }
+  @else {
+    $name: name-convert($name);
+
+    @if is-list($name) {
+      @each $option in $name {
+        $value:  map-get($scoped, $option);
+        $result: append($result, if(is-null($value), map-get(global-options(), $option), $value));
+      }
+    }
+    @else {
+      $value:  map-get($scoped, $name);
+      $result: if(is-null($value), map-get(global-options(), $name), $value);
+    }
+  }
+  @return $result;
+}

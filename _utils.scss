@@ -1,4 +1,5 @@
 @import '~mathsass/dist/math';
+@import '~sass-unitconverter/unitconverter';
 
 // == Utils ====================================================================
 // -- Data Structure -----------------------------------------------------------
@@ -6,7 +7,7 @@
   $iter-num: 0;
   $range-list: ();
 
-  @if type-of($values) == number {
+  @if is-num($values) {
     $iter-num: $values;
   }
   @else {
@@ -19,11 +20,56 @@
   @return $range-list;
 }
 
+@function list($args...) {
+  $list: ();
+  @each $arg in $args {
+    $list: append($list, $arg);
+  }
+  @return $list;
+}
+
+// https://hugogiraudel.com/2013/08/08/advanced-sass-list-functions/
+@function replace-nth($list, $index, $value) {
+  $result: null;
+
+  @if type-of($index) != number {
+    @warn "$index: #{quote($index)} is not a number for `replace-nth`.";
+  } @else if $index == 0 {
+    @warn "List index 0 must be a non-zero integer for `replace-nth`.";
+  } @else if abs($index) > length($list) {
+    @warn "List index is #{$index} but list is only #{length($list)} item long for `replace-nth`.";
+  } @else {
+    $result: ();
+    $index: if($index < 0, length($list) + $index + 1, $index);
+
+    @for $i from 1 through length($list) {
+      @if $i == $index {
+        $result: append($result, $value);
+      } @else {
+        $result: append($result, nth($list, $i));
+      }
+    }
+  }
+
+  @return $result;
+}
+
+// https://gist.github.com/Jakobud/ec056b52f3673cc369dc97f2c2428424
+@function list-remove($list, $index) {
+  $newList: ();
+  @for $i from 1 through length($list) {
+    @if $i != $index {
+      $newList: append($newList, nth($list,$i), 'space');
+    }
+  }
+  @return $newList;
+}
+
 // https://hugogiraudel.com/2014/04/28/casting-map-into-list/
 @function to-list($value, $keep: 'both') {
   $keep: if(index('keys' 'values', $keep), $keep, 'both');
 
-  @if type-of($value) == 'map' {
+  @if is-map($value) {
     $keys: ();
     $values: ();
 
@@ -52,6 +98,10 @@
     $map: map-merge($map, $map-value);
   }
   @return $map;
+}
+
+@function empty-map($x: x) {
+  @return map-remove(($x:$x), $x);
 }
 
 @function map-index($map, $key-value, $type: 'key') {
@@ -89,6 +139,21 @@
     $list: list-remove($list, index($list, $value));
   }
   @return $sortedlist;
+}
+
+@function list-sort-index($list) {
+  $sortedMap: ();
+  @each $i in range($list) {
+    $value: nth($list, $i);
+    @if map-has-key($sortedMap, $value) {
+      $other-i: map-get($sortedMap, $value);
+      $i: if(is-list($other-i), append($other-i, $i), ($other-i, $i));
+    }
+    $sortedMap: map-merge($sortedMap, ($value: $i));
+  }
+
+  $sortedMap: map-sort($sortedMap);
+  @return flatten(map-values($sortedMap)...);
 }
 
 // https://gist.github.com/Jakobud/a0ac11e80a1de453cd86f0d3fc0a1410
@@ -146,10 +211,10 @@
 }
 
 @function contain($values, $item, $type: 'key') {
-  @if type-of($values) == 'list' {
+  @if      is-list($values) {
     @return index($values, $item) != null;
   }
-  @else if type-of($values) == 'map' {
+  @else if is-map($values) {
     @if      $type == 'key' {
       @return map-has-key($values, $item);
     }
@@ -162,6 +227,49 @@
   }
 }
 
+@function flatten($list...) {
+  $newList: ();
+  @each $value in $list {
+    @if is-list($value) {
+      @each $deepV in $value {
+        $newList: append($newList, $deepV);
+      }
+    }
+    @else {
+      $newList: append($newList, $value);
+    }
+  }
+  @return $newList;
+}
+
+@function map($values, $function, $type: 'value', $separator: auto) {
+  @if      is-list($values) {
+    $newList: ();
+    @if      $type == 'list' {
+      $newList: do-list($values, $function);
+    }
+    @else if $type == 'value' {
+      @each $value in $values {
+        $newList: append($newList, do($value, $function), $separator);
+      }
+    }
+    @return $newList;
+  }
+  @else if is-map($values)  {
+    $newMap: ();
+    @each $key, $value in $values {
+      $newMap: map-merge($newMap, if($type == 'key',
+                                     (do($key, $function): $value),
+                                     ($key: do($value, $function))
+      ));
+    }
+    @return $newMap;
+  }
+  @else {
+    @return do($values, $function);
+  }
+}
+
 // -- Math ---------------------------------------------------------------------
 @function count-round($number, $count: 1) {
   $digit: pow(10, $count - 1);
@@ -169,4 +277,102 @@
   $upper: $number * $digit;
   $round: floor($upper + 0.5);
   @return $round / $digit;
+}
+
+// -- Other --------------------------------------------------------------------
+@function do($value, $functions...) {
+  $result: $value;
+  $functions: flatten($functions...);
+  @each $function in $functions {
+    $result: call($function, $result);
+  }
+  @return $result;
+}
+
+@function do-list($value, $functions...) {
+  $result: $value;
+  $functions: flatten($functions...);
+  @each $function in $functions {
+    $result: call($function, $result...);
+  }
+  @return $result;
+}
+
+@function to-unit-converted($value, $unit) {
+  @return if(is-num($value, false),
+  to-unit($value, $unit), to-unit-data($value, $unit));
+}
+
+@function to-unit-data($data, $unit) {
+  $new-data: ();
+  @if      is-list($data) {
+    @each $value in $data {
+      $converted: to-unit-converted($value, $unit);
+      $new-data: append($new-data, $converted);
+    }
+  }
+  @else if is-map($data) {
+    @each $key, $value in $data {
+      $converted: to-unit-converted($value, $unit);
+      $new-data: map-merge($new-data, ($key: $converted));
+    }
+  }
+  @else {
+    @return if(is-num($data, false), to-unit($data, $unit), $data);
+  }
+  @return $new-data;
+}
+
+@function limit-size($size, $max-size) {
+  @return if($size > $max-size, $max-size, $size);
+}
+
+@function max-size($sizes, $max-size) {
+  $sizes:    to-unit-data($sizes,    px);
+  $max-size: to-unit-data($max-size, px);
+  @if not is-list($sizes) {
+    @return limit-size($sizes, $max-size);
+  }
+
+  $new-sizes: ();
+  @each $size in $sizes {
+    $new-size: if(is-len($size), limit-size($size, $max-size), $size);
+    $new-sizes: append($new-sizes, $new-size);
+  }
+  @return $new-sizes;
+}
+
+@function size-break($function, $fluid-unit, $now-size, $next-size,
+$now-break, $next-break, $max-size: null) {
+  $now-size:   to-unit-data($now-size,   $fluid-unit);
+  $next-size:  to-unit-data($next-size,  $fluid-unit);
+  $now-break:  to-unit-data($now-break,  $fluid-unit);
+  $next-break: to-unit-data($next-break, $fluid-unit);
+  $max-size:   to-unit-data($max-size,   $fluid-unit);
+
+  $check-function: $function == 'fluid-size';
+  $args: if($check-function,
+  list($now-size, $next-size, $now-break, $next-break),
+  list($now-size, $next-size, $max-size, $now-break, $next-break));
+
+  @if not (is-list($now-size) or is-list($next-size)) {
+    @return map($args, $function, 'list');
+  }
+
+  $results: ();
+  $each-sizes: zip($now-size, $next-size);
+  @each $start-size, $end-size in $each-sizes {
+    $result: null;
+    @if is-len($start-size) and is-len($end-size) {
+      $args: replace-nth($args, 1, $start-size);
+      $args: replace-nth($args, 2, $end-size  );
+
+      $result: map($args, $function, 'list');
+    }
+    @else {
+      $result: if($check-function, $start-size, $next-break);
+    }
+    $results: append($results, $result);
+  }
+  @return $results;
 }
