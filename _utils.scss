@@ -145,11 +145,15 @@
   $sortedMap: ();
   @each $i in range($list) {
     $value: nth($list, $i);
+    @if map-has-key($sortedMap, $value) {
+      $other-i: map-get($sortedMap, $value);
+      $i: if(is-list($other-i), append($other-i, $i), ($other-i, $i));
+    }
     $sortedMap: map-merge($sortedMap, ($value: $i));
   }
 
   $sortedMap: map-sort($sortedMap);
-  @return map-values($sortedMap);
+  @return flatten(map-values($sortedMap)...);
 }
 
 // https://gist.github.com/Jakobud/a0ac11e80a1de453cd86f0d3fc0a1410
@@ -332,7 +336,8 @@
 
   $new-sizes: ();
   @each $size in $sizes {
-    $new-sizes: append($new-sizes, if(is-len($size), limit-size($size, $max-size), $size));
+    $new-size: if(is-len($size), limit-size($size, $max-size), $size);
+    $new-sizes: append($new-sizes, $new-size);
   }
   @return $new-sizes;
 }
