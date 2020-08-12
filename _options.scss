@@ -4,12 +4,14 @@
 // Global Options
 $fls-unit:  each !default; // each or units(Ex. px, em, rem, ...)
 $fls-max:   null !default; // null or length(Ex. 20px, 20pt, ...)
+$fls-min:   null !default; // null or length(Ex. 20px, 20pt, ...)
 $fls-limit: size !default; // size or break
 
 @function global-options() {
   $global-options: (
     unit:     $fls-unit,
     max-size: $fls-max,
+    min-size: $fls-min,
     limit:    $fls-limit,
   );
   @return $global-options;
@@ -21,6 +23,8 @@ $fluid-options: (
    unit:        unit,
    max:         max-size,
    max-size:    max-size,
+   min:         min-size,
+   min-size:    min-size,
    limit:       limit,
 );
 

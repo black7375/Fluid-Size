@@ -323,20 +323,28 @@
   @return $new-data;
 }
 
-@function limit-size($size, $max-size) {
-  @return if($size > $max-size, $max-size, $size);
+@function limit-size($size, $max-size, $min-size) {
+  @if not is-null($max-size) {
+    $size: if($size > $max-size, $max-size, $size);
+  }
+  @if not is-null($min-size) {
+    $size: if($size < $min-size, $min-size, $size);
+  }
+
+  @return $size;
 }
 
-@function max-size($sizes, $max-size) {
+@function limit-sizes($sizes, $max-size, $min-size) {
   $sizes:    to-unit-data($sizes,    px);
   $max-size: to-unit-data($max-size, px);
+  $min-size: to-unit-data($min-size, px);
   @if not is-list($sizes) {
-    @return limit-size($sizes, $max-size);
+    @return limit-size($sizes, $max-size, $min-size);
   }
 
   $new-sizes: ();
   @each $size in $sizes {
-    $new-size: if(is-len($size), limit-size($size, $max-size), $size);
+    $new-size: if(is-len($size), limit-size($size, $max-size, $min-size), $size);
     $new-sizes: append($new-sizes, $new-size);
   }
   @return $new-sizes;

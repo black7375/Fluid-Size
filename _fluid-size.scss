@@ -260,14 +260,15 @@ $DEFAULT-SIZE:  16px    !default;
     // Apply Options
     $fluid-unit: get-option($options,  unit);
     $max-size:   get-option($options,   max);
+    $min-size:   get-option($options,   min);
     $limit:      get-option($options, limit);
 
     $limit-breaks: null;
     $limit-types:  null;
-    @if not is-null($max-size) {
+    @if (not is-null($max-size)) or (not is-null($min-size)) {
       @if $limit == 'size' and $limit != 'break' {
-        $now-size:  max-size($now-size,  $max-size);
-        $next-size: max-size($next-size, $max-size);
+        $now-size:  limit-sizes($now-size,  $max-size, $min-size);
+        $next-size: limit-sizes($next-size, $max-size, $min-size);
       }
       $limit-breaks: fluid-limit-breaks($now-size,  $next-size, $max-size,
                                         $now-break, $next-break);
