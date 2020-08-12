@@ -275,6 +275,8 @@ $DEFAULT-SIZE:  16px    !default;
                                        $now-break, $next-break,  $limit-breaks, $limit);
       $max-size:  to-unit-data($max-size,  $fluid-unit);
     }
+    $now-size:  to-unit-data($now-size,  $fluid-unit);
+    $next-size: to-unit-data($next-size, $fluid-unit);
     $fluid-sizes: fluid-sizes($now-size, $next-size, $now-break, $next-break, $fluid-unit);
 
     // Apply Media
