@@ -2,13 +2,15 @@
 
 // == Options =================================================================
 // Global Options
-$fls-unit:  each !default; // each or units(Ex. px, em, rem, ...)
-$fls-max:   null !default; // null or length(Ex. 20px, 20pt, ...)
-$fls-min:   null !default; // null or length(Ex. 20px, 20pt, ...)
-$fls-limit: size !default; // size or break
+$fls-device:  min !default; // min  or max, devices's key(Ex. phone, tablet, ...)
+$fls-unit:   each !default; // each or units(Ex. px, em, rem, ...)
+$fls-max:    null !default; // null or length(Ex. 20px, 20pt, ...)
+$fls-min:    null !default; // null or length(Ex. 20px, 20pt, ...)
+$fls-limit:  size !default; // size or break
 
 @function global-options() {
   $global-options: (
+    device:   $fls-device,
     unit:     $fls-unit,
     max-size: $fls-max,
     min-size: $fls-min,
@@ -20,6 +22,7 @@ $fls-limit: size !default; // size or break
 // Mapping with Scoped Options
 // Scoped Name. Global Name
 $fluid-options: (
+   device:      device,
    unit:        unit,
    max:         max-size,
    max-size:    max-size,

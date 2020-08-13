@@ -21,28 +21,50 @@ $DEFAULT-SIZE:  16px    !default;
   @return sqrt(pow($screen-width, 2) + pow($screen-height, 2)) / $screen-size;
 }
 
-@function calc-angle($size) {
+@function calc-dependency($value) {
+  $screen-distance: nth($value, 1) * 100;
+  $screen-size:     nth($value, 2);
+  $screen-width:    num(nth($value, 3));
+  $screen-height:   num(nth($value, 4));
+
+  $ppi: calc-ppi($screen-width, $screen-height, $screen-size);
+  $dependent-value: $screen-distance * $ppi;
+  @return $dependent-value;
+}
+
+@function calc-angle($size, $options) {
   @if not is-len($size) {
     @return $size;
   }
+
   $size:     num(px($size));
-  $values:   zip-responsive();
-  $smallest: null;
+  $device: get-option($options, device);
+  $target: null;
 
-  @each $value in $values {
-    $screen-distance: nth($value, 1) * 100;
-    $screen-size:     nth($value, 2);
-    $screen-width:    num(nth($value, 3));
-    $screen-height:   num(nth($value, 4));
+  @if contain('min' 'max', $device) {
+    $values:   zip-responsive();
+    @each $value in $values {
+      $dependent-value: calc-dependency($value);
 
-    $ppi: calc-ppi($screen-width, $screen-height, $screen-size);
-    $independent-value: $screen-distance * $ppi;
-    @if (($smallest == null) or ($smallest > $independent-value)) {
-      $smallest: $independent-value;
+      @if $device == 'min' {
+        @if (($target == null) or ($target > $dependent-value)) {
+          $target: $dependent-value;
+        }
+      }
+      @if $device == 'max' {
+        @if (($target == null) or ($target < $dependent-value)) {
+          $target: $dependent-value;
+        }
+      }
     }
   }
+  @else {
+    $value: list(map-get($screen-distances, $device), map-get($screen-sizes,       $device),
+                 map-get($breakpoints,      $device), map-get($breakpoints-height, $device));
+    $target: calc-dependency($value);
+  }
 
-  $angle: $size * 54 / $smallest;
+  $angle: $size * 54 / $target;
   $visual-angle: atan($angle) * (10800 / $PI);
   @return count-round($visual-angle, 2);
 }
@@ -73,8 +95,9 @@ $DEFAULT-SIZE:  16px    !default;
   @return $break-sizes;
 }
 
-@function fit-size($size) {
-  $scaled-size: map($size, calc-angle calc-size, $separator: comma); // Each Fit Size
+@function fit-size($size, $options: empty-map()) {
+  $scaled-size: map(($size, $options), calc-angle calc-size,
+                    $type: list, $separator: comma); // Each Fit Size
 
   @return if(is-list($size), call(zip, $scaled-size...), $scaled-size);
 }
@@ -101,7 +124,7 @@ $DEFAULT-SIZE:  16px    !default;
 }
 @function fluid-sizes($now-size, $next-size, $now-break, $next-break, $fluid-unit: px) {
   $fluid-sizes: size-break(fluid-size, $fluid-unit,
-                           $now-size, $next-size, $now-break, $next-break);
+  $now-size, $next-size, $now-break, $next-break);
   @return $fluid-sizes;
 }
 
@@ -307,7 +330,7 @@ $DEFAULT-SIZE:  16px    !default;
     $options: map-merge($options, (unit: px));
   }
 
-  $fit-sizes: fit-size($size);
+  $fit-sizes: fit-size($size, $options);
 
   $keys:   join($DEFAULT-BREAK, map-keys($breakpoints));
   $values: join(($size,), $fit-sizes);
