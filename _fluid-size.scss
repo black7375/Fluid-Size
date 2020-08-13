@@ -102,6 +102,58 @@ $DEFAULT-SIZE:  16px    !default;
   @return if(is-list($size), call(zip, $scaled-size...), $scaled-size);
 }
 
+@mixin fit-media($property, $sizes, $options: empty-map()) {
+  $fit-sizes: to-unit-data($sizes, px);
+  $fluid-breakpoints: map-merge(($DEFAULT-BREAK: 0px), to-unit-map($breakpoints, px));
+  $fluid-breakpoints: map-sort-values($fluid-breakpoints);
+
+  @if not map-has-key($fit-sizes, $DEFAULT-BREAK) {
+    $default-map: ($DEFAULT-BREAK: $DEAFULT-SIZE);
+    $fit-sizes: map-merge($default-map, $fit-sizes);
+  }
+
+  $first-size: 1;
+  $last-size: length($fluid-breakpoints) - 1;
+  @each $i in range($last-size) {
+    $now-key:  map-nth($fluid-breakpoints, $i);
+    $next-key: map-nth($fluid-breakpoints, $i + 1);
+
+    $now-size:   map-get($fit-sizes, $now-key );
+    $next-size:  map-get($fit-sizes, $next-key);
+    $now-break:  map-get($fluid-breakpoints, $now-key );
+    $next-break: map-get($fluid-breakpoints, $next-key);
+
+    // Apply Options
+    $fluid-unit: get-option($options,  unit);
+    $max-size:   get-option($options,   max);
+    $min-size:   get-option($options,   min);
+    $limit:      get-option($options, limit);
+
+    @if (not is-null($max-size)) or (not is-null($min-size)) {
+      $now-size:  limit-sizes($now-size,  $max-size, $min-size);
+      $next-size: limit-sizes($next-size, $max-size, $min-size);
+    }
+    $now-size:   to-unit-data($now-size,   $fluid-unit);
+    $next-size:  to-unit-data($next-size,  $fluid-unit);
+
+    // Apply Media
+    @if $now-key == $DEFAULT-BREAK {
+      #{$property}: $now-size;
+    }
+    @else {
+      @include media(">=#{$now-key}") {
+        #{$property}: $now-size;
+      }
+      @if $i == $last-size {
+        @include media(">=#{$next-key}") {
+          #{$property}: $next-size;
+        }
+      }
+    }
+
+  }
+}
+
 // -- Fluid --------------------------------------------------------------------
 // https://www.madebymike.com.au/writing/fluid-type-calc-examples/
 @function fluid-rate($start-size, $end-size, $min-screen, $max-screen) {
@@ -129,7 +181,7 @@ $DEFAULT-SIZE:  16px    !default;
 }
 
 @function fluid-limit-break($start-size, $end-size, $max-size,
-                            $min-screen, $max-screen) {
+$min-screen, $max-screen) {
   @if($start-size == $end-size) {
     @return $min-screen;
   }
@@ -141,9 +193,9 @@ $DEFAULT-SIZE:  16px    !default;
   @return if($limit-break <= 0px, 0px, $limit-break);
 }
 @function fluid-limit-breaks($now-size, $next-size, $max-size,
-                             $now-break, $next-break, $fluid-unit: px) {
+$now-break, $next-break, $fluid-unit: px) {
   $limit-breaks: size-break(fluid-limit-break, $fluid-unit,
-                            $now-size, $next-size, $now-break, $next-break, $max-size);
+  $now-size, $next-size, $now-break, $next-break, $max-size);
   @return $limit-breaks;
 }
 
@@ -334,8 +386,15 @@ $DEFAULT-SIZE:  16px    !default;
 
   $keys:   join($DEFAULT-BREAK, map-keys($breakpoints));
   $values: join(($size,), $fit-sizes);
+  $sizes:  to-map($keys, $values);
 
-  @include fluid-media($property, to-map($keys, $values), $options);
+  $mode:   get-option($options, mode);
+  @if $mode == 'fluid' {
+    @include fluid-media($property, $sizes, $options);
+  }
+  @else if $mode == 'fit' {
+    @include fit-media($property, $sizes, $options);
+  }
 }
 
 // -- Interface ----------------------------------------------------------------
