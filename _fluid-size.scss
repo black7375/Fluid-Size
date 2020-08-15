@@ -342,10 +342,10 @@ $now-break, $next-break, $fluid-unit: px) {
     $options: (max-size: $options);
   }
   @if      get-option($options, unit) == each and $type == 'font' {
-    $options: map-merge($options, (unit: em));
+    $options: map-merge($options, (unit: rem));
   }
   @else if get-option($options, unit) == each and $type ==  'box' {
-    $options: map-merge($options, (unit: px));
+    $options: map-merge($options, (unit:  px));
   }
 
   // Validate
