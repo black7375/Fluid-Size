@@ -69,6 +69,13 @@ $DEFAULT-SIZE:  16px    !default;
   $visual-angle: atan($angle) * (10800 / $PI);
   @return count-round($visual-angle, 2);
 }
+@function calc-angles($sizes, $options) {
+  $angles: ();
+  @each $size in $sizes {
+    $angles: append($angles, calc-angle($size, $options));
+  }
+  @return $angles;
+}
 
 @function calc-size($visual-angle) {
   $check:       is-num($visual-angle);
@@ -98,9 +105,9 @@ $DEFAULT-SIZE:  16px    !default;
 
 @function fit-size($size, $options: empty-map()) {
   // Each Fit Size
-  $scaled-size: map(($size, $options), calc-angle,
-                    $type: list, $separator: comma);
-  $scaled-size: map($scaled-size, calc-size, $separator: comma);
+  $visual-angle: calc-angles($size, $options);
+  $scaled-size: map($visual-angle, calc-size, $separator: comma);
+  $scaled-size: to-unit-data($scaled-size, px);
 
   @return if(is-list($size), call(zip, $scaled-size...), $scaled-size);
 }
