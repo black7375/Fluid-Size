@@ -8,7 +8,6 @@
 
 // == Fluid Size ===============================================================
 $FIRST-BREAK: default !default;
-$DEFAULT-SIZE:  16px    !default;
 
 @function zip-responsive() {
   @return zip(
@@ -38,7 +37,7 @@ $DEFAULT-SIZE:  16px    !default;
     @return $size;
   }
 
-  $size:     num(px($size));
+  $size:   num(px($size));
   $device: get-option($options, device);
   $target: null;
 
@@ -134,7 +133,7 @@ $DEFAULT-SIZE:  16px    !default;
 }
 @function fluid-sizes($now-size, $next-size, $now-break, $next-break, $fluid-unit: px) {
   $fluid-sizes: size-break(fluid-size, $fluid-unit,
-  $now-size, $next-size, $now-break, $next-break);
+                           $now-size, $next-size, $now-break, $next-break);
   @return $fluid-sizes;
 }
 
@@ -153,7 +152,7 @@ $min-screen, $max-screen) {
 @function fluid-limit-breaks($now-size, $next-size, $max-size,
 $now-break, $next-break, $fluid-unit: px) {
   $limit-breaks: size-break(fluid-limit-break, $fluid-unit,
-  $now-size, $next-size, $now-break, $next-break, $max-size);
+                            $now-size, $next-size, $now-break, $next-break, $max-size);
   @return $limit-breaks;
 }
 
