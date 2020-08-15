@@ -150,6 +150,9 @@ $CACHED-FLUID-TYPES:    fluid-types()    !default;
     @each $all-options-key in $all-options-keys {
       $fluid-type:   map-get($fluid-types, $all-options-key);
       $option-value: map-get($all-options, $all-options-key);
+      @if $all-options-key == 'max-size' or $all-options-key == 'min-size' {
+        $option-value: if(is-null($option-value), $option-value, get-unit($option-value));
+      }
 
       @if not contain($fluid-type, $option-value) {
         @error "$options's value #{$option-value} doesn't exist at fluid-types";
