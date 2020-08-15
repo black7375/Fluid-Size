@@ -20,6 +20,14 @@
   @return $range-list;
 }
 
+@function repeat($value, $size) {
+  $repeat-list:();
+  @each $i in range($size) {
+    $repeat-list: append($repeat-list, $value);
+  }
+  @return $repeat-list;
+}
+
 @function list($args...) {
   $list: ();
   @each $arg in $args {
