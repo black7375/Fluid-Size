@@ -96,8 +96,10 @@ $DEFAULT-SIZE:  16px    !default;
 }
 
 @function fit-size($size, $options: empty-map()) {
-  $scaled-size: map(($size, $options), calc-angle calc-size,
-                    $type: list, $separator: comma); // Each Fit Size
+  // Each Fit Size
+  $scaled-size: map(($size, $options), calc-angle,
+                    $type: list, $separator: comma);
+  $scaled-size: map($scaled-size, calc-size, $separator: comma);
 
   @return if(is-list($size), call(zip, $scaled-size...), $scaled-size);
 }
