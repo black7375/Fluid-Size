@@ -337,6 +337,7 @@ $now-break, $next-break, $fluid-unit: px) {
 }
 
 @mixin fluid($property, $size, $options: empty-map(), $type: 'font') {
+  // Preprocessing for $options
   @if not is-map($options) {
     $options: (max-size: $options);
   }
@@ -346,6 +347,9 @@ $now-break, $next-break, $fluid-unit: px) {
   @else if get-option($options, unit) == each and $type ==  'box' {
     $options: map-merge($options, (unit: px));
   }
+
+  // Validate
+  $validate-options: validate-options($options);
 
   // Single value to List processing
   @if not is-list($size) {

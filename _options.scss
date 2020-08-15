@@ -10,19 +10,20 @@ $fls-min:    null !default; // null  or length(Ex. 20px, 20pt, ...)
 $fls-limit:  size !default; // size  or break
 
 @function global-options() {
+//  Global Name. Global Variable.
   $global-options: (
-    mode:     $fls-mode,
-    device:   $fls-device,
-    unit:     $fls-unit,
-    max-size: $fls-max,
-    min-size: $fls-min,
-    limit:    $fls-limit,
+    mode:        $fls-mode,
+    device:      $fls-device,
+    unit:        $fls-unit,
+    max-size:    $fls-max,
+    min-size:    $fls-min,
+    limit:       $fls-limit,
   );
   @return $global-options;
 }
 
 // Mapping with Scoped Options
-// Scoped Name. Global Name
+// Scoped Name. Global Name.
 $fluid-options: (
    mode:        mode,
    device:      device,
@@ -34,6 +35,21 @@ $fluid-options: (
    limit:       limit,
 );
 
+$unit-types: map-keys(n-units(0)) !default;
+@function fluid-types() {
+//  Global Name. Types.
+  $fluid-types: (
+    mode:        fluid fit,
+    device:      join(min max, map-keys($breakpoints)),
+    unit:        join(each, $unit-types),
+    max-size:    join(null, $unit-types),
+    min-size:    join(null, $unit-types),
+    limit:       size break,
+  );
+  @return $fluid-types;
+}
+
+// -- Get ----------------------------------------------------------------------
 @function scoped-convert($scoped-options) {
   @if length($scoped-options) == 0 {
     @return ();
@@ -83,4 +99,66 @@ $fluid-options: (
     }
   }
   @return $result;
+}
+
+// -- Validation ---------------------------------------------------------------
+$CACHED-GLOBAL-OPTIONS: global-options() !default;
+$CACHED-FLUID-OPTIONS:  $fluid-options   !default;
+$CACHED-OPTIONS-KEYS:   ()               !default;
+$CACHED-ALL-OPTIONS:    global-options() !default;
+$CACHED-FLUID-TYPES:    fluid-types()    !default;
+
+@function check-option($criteria-name, $target-name, $target-type, $option-criteria, $options) {
+  @each $option in $options {
+    @if not contain($option-criteria, $option) {
+      @error "#{$target-name}'s #{$target-type}, #{$option} doesn't exist at #{$criteria-name}";
+      @return false;
+    }
+  }
+  @return true;
+}
+
+@function validate-options($options: ()) {
+  $validate-mapping: false;
+  $validate-keys:    false;
+  $validate-types:   true;
+
+  // Check api name
+  $global-options:       global-options();
+  $mapping-names: map-values($fluid-options);
+  @if not ($CACHED-GLOBAL-OPTIONS == $global-options and $CACHED-FLUID-OPTIONS == $fluid-options) {
+    $validate-mapping: check-option("global-options", "$fluid-options", "global name", $global-options, $mapping-names);
+
+    $CACHED-GLOBAL-OPTIONS: $global-options;
+    $CACHED-FLUID-OPTIONS:  $fluid-options;
+  }
+
+  $options-keys: map-keys($options);
+  @if not contain($CACHED-OPTIONS-KEYS, $options-keys) {
+    $validate-keys: check-option("$fluid-options key", "$options", "key", $fluid-options, $options-keys);
+
+    $CACHED-OPTIONS-KEYS: map-merge($CACHED-OPTIONS-KEYS, ($options-keys: true));
+  }
+
+  // Check each type
+  $all-options: get-option($options);
+  $all-options-keys: map-keys($all-options);
+
+  $fluid-types: fluid-types();
+  @if not ($CACHED-ALL-OPTIONS == $all-options and $CACHED-FLUID-TYPES == $fluid-types) {
+    @each $all-options-key in $all-options-keys {
+      $fluid-type:   map-get($fluid-types, $all-options-key);
+      $option-value: map-get($all-options, $all-options-key);
+
+      @if not contain($fluid-type, $option-value) {
+        @error "$options's value #{$option-value} doesn't exist at fluid-types";
+        $validate-types: false;
+      }
+    }
+
+    $CACHED-ALL-OPTIONS: $all-options;
+    $CACHED-FLUID-TYPES: $fluid-types;
+  }
+
+  @return $validate-mapping and $validate-keys and $validate-types;
 }
