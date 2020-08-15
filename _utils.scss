@@ -126,12 +126,38 @@
 }
 
 // https://gist.github.com/Jakobud/744b98b629abe018766f6d506a2e92ae
+// https://css-tricks.com/snippets/sass/sorting-function/
+@function sort-compare($a, $b) {
+  @if is-num($a, false) and is-num($b, false) {
+    @return $a < $b;
+  }
+
+  $order: "0" "1" "2" "3" "4" "5" "6" "7" "8" "9"
+          "a" "b" "c" "d" "e" "f" "g" "h" "i" "j"
+          "k" "l" "m" "n" "o" "p" "q" "r" "s" "t"
+          "u" "v" "w" "x" "y" "z";
+
+  $a: to-lower-case($a + unquote(""));
+  $b: to-lower-case($b + unquote(""));
+
+  @for $i from 1 through min(str-length($a), str-length($b)) {
+    $char-a: str-slice($a, $i, $i);
+    $char-b: str-slice($b, $i, $i);
+
+    @if $char-a and $char-b and index($order, $char-a) != index($order, $char-b) {
+      @return index($order, $char-a) < index($order, $char-b);
+    }
+  }
+
+  @return str-length($a) < str-length($b);
+}
+
 @function list-sort($list) {
   $sortedlist: ();
   @while length($list) > 0 {
     $value: nth($list,1);
     @each $item in $list {
-      @if $item < $value {
+      @if sort-compare($item, $value) {
         $value: $item;
       }
     }
