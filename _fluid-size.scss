@@ -349,7 +349,8 @@ $now-break, $next-break, $fluid-unit: px) {
   }
 
   // Validate
-  $validate-options: validate-options($options);
+  $validate-breakpoints: validate-breakpoints();
+  $validate-options:     validate-options($options);
 
   // Single value to List processing
   @if not is-list($size) {
