@@ -1,5 +1,5 @@
-@import '~mathsass/dist/math';
-@import '~sass-unitconverter/unitconverter';
+// @import '~mathsass/dist/math';
+// @import '~sass-unitconverter/unitconverter';
 
 // == Utils ====================================================================
 // -- Data Structure -----------------------------------------------------------
@@ -18,6 +18,14 @@
     $range-list: append($range-list, $i);
   }
   @return $range-list;
+}
+
+@function repeat($value, $size) {
+  $repeat-list:();
+  @each $i in range($size) {
+    $repeat-list: append($repeat-list, $value);
+  }
+  @return $repeat-list;
 }
 
 @function list($args...) {
@@ -126,12 +134,38 @@
 }
 
 // https://gist.github.com/Jakobud/744b98b629abe018766f6d506a2e92ae
+// https://css-tricks.com/snippets/sass/sorting-function/
+@function sort-compare($a, $b) {
+  @if is-num($a, false) and is-num($b, false) {
+    @return $a < $b;
+  }
+
+  $order: "0" "1" "2" "3" "4" "5" "6" "7" "8" "9"
+          "a" "b" "c" "d" "e" "f" "g" "h" "i" "j"
+          "k" "l" "m" "n" "o" "p" "q" "r" "s" "t"
+          "u" "v" "w" "x" "y" "z";
+
+  $a: to-lower-case($a + unquote(""));
+  $b: to-lower-case($b + unquote(""));
+
+  @for $i from 1 through min(str-length($a), str-length($b)) {
+    $char-a: str-slice($a, $i, $i);
+    $char-b: str-slice($b, $i, $i);
+
+    @if $char-a and $char-b and index($order, $char-a) != index($order, $char-b) {
+      @return index($order, $char-a) < index($order, $char-b);
+    }
+  }
+
+  @return str-length($a) < str-length($b);
+}
+
 @function list-sort($list) {
   $sortedlist: ();
   @while length($list) > 0 {
     $value: nth($list,1);
     @each $item in $list {
-      @if $item < $value {
+      @if sort-compare($item, $value) {
         $value: $item;
       }
     }
@@ -323,20 +357,25 @@
   @return $new-data;
 }
 
-@function limit-size($size, $max-size) {
-  @return if($size > $max-size, $max-size, $size);
+@function limit-size($size, $max-size, $min-size) {
+  @if not is-null($max-size) {
+    $size: if($size > $max-size, $max-size, $size);
+  }
+  @if not is-null($min-size) {
+    $size: if($size < $min-size, $min-size, $size);
+  }
+
+  @return $size;
 }
 
-@function max-size($sizes, $max-size) {
+@function limit-sizes($sizes, $max-size, $min-size) {
   $sizes:    to-unit-data($sizes,    px);
   $max-size: to-unit-data($max-size, px);
-  @if not is-list($sizes) {
-    @return limit-size($sizes, $max-size);
-  }
+  $min-size: to-unit-data($min-size, px);
 
   $new-sizes: ();
   @each $size in $sizes {
-    $new-size: if(is-len($size), limit-size($size, $max-size), $size);
+    $new-size: if(is-len($size), limit-size($size, $max-size, $min-size), $size);
     $new-sizes: append($new-sizes, $new-size);
   }
   @return $new-sizes;
@@ -355,10 +394,6 @@ $now-break, $next-break, $max-size: null) {
   list($now-size, $next-size, $now-break, $next-break),
   list($now-size, $next-size, $max-size, $now-break, $next-break));
 
-  @if not (is-list($now-size) or is-list($next-size)) {
-    @return map($args, $function, 'list');
-  }
-
   $results: ();
   $each-sizes: zip($now-size, $next-size);
   @each $start-size, $end-size in $each-sizes {
@@ -375,4 +410,21 @@ $now-break, $next-break, $max-size: null) {
     $results: append($results, $result);
   }
   @return $results;
+}
+
+@function is-calc($value) {
+  @if not is-str($value) {
+    @return false;
+  }
+  @else {
+    $str-front:  str-slice($value, 1, 5) == "calc(";
+    $str-back:   str-slice($value, str-length($value)) == ")";
+    @return $str-front and $str-back;
+  }
+}
+
+@function replace-size($sizes, $index, $max-size) {
+  $size: nth($sizes, $index);
+  @return if(is-len($size) or is-calc($size),
+             replace-nth($sizes, $index, $max-size), $sizes);
 }
