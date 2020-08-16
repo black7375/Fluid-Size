@@ -121,6 +121,9 @@ $FIRST-BREAK: default !default;
 }
 
 @function fluid-size($start-size, $end-size, $min-screen, $max-screen) {
+  @if $start-size == $end-size {
+    @return $start-size;
+  }
   $rate: fluid-rate($start-size, $end-size, $min-screen, $max-screen);
   $basic-size: fluid-basic-size($start-size, $min-screen, $rate);
 
