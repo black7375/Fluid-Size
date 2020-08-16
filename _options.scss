@@ -6,8 +6,8 @@
 $fls-mode:  fluid !default; // fluid or fit
 $fls-device:  min !default; // min   or max, devices's key(Ex. phone, tablet, ...)
 $fls-unit:   each !default; // each  or units(Ex. px, em, rem, ...)
-$fls-max:    null !default; // null  or length(Ex. 20px, 20pt, ...)
 $fls-min:    null !default; // null  or length(Ex. 20px, 20pt, ...)
+$fls-max:    null !default; // null  or length(Ex. 20px, 20pt, ...)
 $fls-limit:  size !default; // size  or break
 
 @function global-options() {
@@ -16,8 +16,8 @@ $fls-limit:  size !default; // size  or break
     mode:        $fls-mode,
     device:      $fls-device,
     unit:        $fls-unit,
-    max-size:    $fls-max,
-    min-size:    $fls-min,
+    min:         $fls-min,
+    max:         $fls-max,
     limit:       $fls-limit,
   );
   @return $global-options;
@@ -29,10 +29,10 @@ $fluid-options: (
    mode:        mode,
    device:      device,
    unit:        unit,
-   max:         max-size,
-   max-size:    max-size,
-   min:         min-size,
-   min-size:    min-size,
+   min:         min,
+   min-size:    min,
+   max:         max,
+   max-size:    max,
    limit:       limit,
 );
 
@@ -43,8 +43,8 @@ $unit-types: map-keys(n-units(0)) !default;
     mode:        fluid fit,
     device:      join(min max, map-keys($breakpoints)),
     unit:        join(each, $unit-types),
-    max-size:    join(null, $unit-types),
-    min-size:    join(null, $unit-types),
+    min:         join(null, $unit-types),
+    max:         join(null, $unit-types),
     limit:       size break,
   );
   @return $fluid-types;
@@ -150,7 +150,7 @@ $CACHED-FLUID-TYPES:    fluid-types()    !default;
     @each $all-options-key in $all-options-keys {
       $fluid-type:   map-get($fluid-types, $all-options-key);
       $option-value: map-get($all-options, $all-options-key);
-      @if $all-options-key == 'max-size' or $all-options-key == 'min-size' {
+      @if contain('min' 'max', $all-options-key) {
         $option-value: if(is-null($option-value), $option-value, get-unit($option-value));
       }
 
