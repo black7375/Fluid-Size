@@ -42,7 +42,9 @@ npm install @black7375/fluid-size
 Just use the name of the [API](https://github.com/black7375/fluid-size/wiki/API) with `@include`!!
 
 ```scss
- @include font-size($size-value, $max-size-value);
+@include font-size($size-value, $max-size-value);
+// or
+@include font-size($size-value, $options);
 ```
 
  **Converted Sample**
@@ -50,7 +52,7 @@ Just use the name of the [API](https://github.com/black7375/fluid-size/wiki/API)
 ```scss
 // Code
 body {
-  @include font-size(16px);
+  @include font-size(16px !important, (unit: em, device: min, max: 25px));
 }
 
 /** Tentative Result
@@ -67,24 +69,43 @@ body {
  */
 
 // Result
-@media (min-width: 480px) { // Phone
+body {
+  font-size: 1em !important;
+}
+
+@media (min-width: 480px) {  // Phone
   body {
-    font-size: calc(-0.9504790795vw + 1.4567984055em);
+    font-size: calc(-0.95048vw + 1.4568em) !important;
   }
 }
-@media (min-width: 768px) { // Tablet
+
+@media (min-width: 768px) {  // Tablet
   body {
-    font-size: calc(0.1404102228vw + 0.9331715404em);
+    font-size: calc(0.14041vw + 0.93317em) !important;
   }
 }
+
 @media (min-width: 1280px) { // Laptop
   body {
-    font-size: calc(0.1306874648vw + 0.9409497468em);
+    font-size: calc(0.13069vw + 0.94095em) !important;
   }
 }
+
 @media (min-width: 1920px) { // Desktop
   body {
-    font-size: calc(0.5082290299vw + 0.4878998687em);
+    font-size: calc(0.50823vw + 0.4879em) !important;
+  }
+}
+
+@media (min-width: 2560px) { // High-Desktop
+  body {
+    font-size: calc(0.50823vw + 0.4879em) !important;
+  }
+}
+
+@media (min-width: 3383px) { // Reach maximum size
+  body {
+    font-size: 1.5625em !important;
   }
 }
 ```
