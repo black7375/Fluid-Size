@@ -57,7 +57,7 @@ body {
 
 /** Tentative Result
  * INFO
- * Basis Angle: 60 arc min
+ * Basis Angle: min angle device(Tablet)
  *
  * SIZES
  * Default:            16px;
@@ -110,6 +110,28 @@ body {
 }
 ```
 
+### Options
+
+[Wiki:API(Options)](https://github.com/black7375/fluid-size/wiki/API#options)
+
+Options consist of global and scoped options.
+
+- Global Option: Setting it as a `variable` changes the default value of the whole.
+- Scoped Option: It is provided as an argument(`map` type) to the function, and when used, applies only to the current value.
+
+```scss
+// Global Option
+$option1: value1;
+$option2: value2;
+
+// Scoped Option
+tag {
+  @include property($size, (option1: value1, option2: value2));
+}
+```
+
+You can customize resizing method, result's unit, min or max size, ..etc.
+
 ## Learn More
 [Wiki:The theory of font size and readability](https://github.com/black7375/fluid-size/wiki/The-theory-of-font-size-and-readability)
 
@@ -123,6 +145,6 @@ source: [Legibility: how to make text convenient to read](https://uxdesign.cc/le
 ### Calculation process
 
 1. Size specification
-2. Angle calculations in the devices that would look the smallest(or can you specify which device to reference?)
+2. Angle calculations in the devices that would look the smallest(or can you specify which device to reference?, [Options:device](https://github.com/black7375/Fluid-Size/wiki/API#2-device))
 3. Generate a `fit size` for each device based on the angle
 4. Provides fluidity between devices
