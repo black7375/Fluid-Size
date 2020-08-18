@@ -428,3 +428,14 @@ $now-break, $next-break, $max-size: null) {
   @return if(is-len($size) or is-calc($size),
              replace-nth($sizes, $index, $max-size), $sizes);
 }
+
+@function check-sizes($sizesA, $sizesB) {
+  $sizes: zip($sizesA, $sizesB);
+
+  @each $sizeA, $sizeB in $sizes {
+    @if is-num($sizeA, false) and is-num($sizeB, false) {
+      @return $sizeA <= $sizeB;
+    }
+  }
+  @return false;
+}
