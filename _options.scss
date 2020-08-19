@@ -25,7 +25,7 @@ $fls-limit:  size !default; // size  or break
 
 // Mapping with Scoped Options
 // Scoped Name. Global Name.
-$fluid-options: (
+$fluid-options-map: (
    mode:        mode,
    device:      device,
    unit:        unit,
@@ -58,7 +58,7 @@ $unit-types: map-keys(n-units(0)) !default;
 
   $result: ();
   @each $key, $value in $scoped-options {
-    $global-key: map-get($fluid-options, $key);
+    $global-key: map-get($fluid-options-map, $key);
     $result:     map-merge($result, ($global-key: $value));
   }
   @return $result;
@@ -68,12 +68,12 @@ $unit-types: map-keys(n-units(0)) !default;
   $result: ();
   @if is-list($name) {
     @each $key in $name {
-      $global-key: map-get($fluid-options, $key);
+      $global-key: map-get($fluid-options-map, $key);
       $result: append($result, $global-key);
     }
   }
   @else {
-    $result: map-get($fluid-options, $name);
+    $result: map-get($fluid-options-map, $name);
   }
   @return $result;
 }
@@ -103,11 +103,11 @@ $unit-types: map-keys(n-units(0)) !default;
 }
 
 // -- Validation ---------------------------------------------------------------
-$CACHED-GLOBAL-OPTIONS: global-options() !default;
-$CACHED-FLUID-OPTIONS:  $fluid-options   !default;
-$CACHED-OPTIONS-KEYS:   ()               !default;
-$CACHED-ALL-OPTIONS:    global-options() !default;
-$CACHED-FLUID-TYPES:    fluid-types()    !default;
+$CACHED-GLOBAL-OPTIONS: global-options()   !default;
+$CACHED-FLUID-OPTIONS:  $fluid-options-map !default;
+$CACHED-OPTIONS-KEYS:   ()                 !default;
+$CACHED-ALL-OPTIONS:    global-options()   !default;
+$CACHED-FLUID-TYPES:    fluid-types()      !default;
 
 @function check-option($criteria-name, $target-name, $target-type, $option-criteria, $options) {
   @each $option in $options {
@@ -126,17 +126,20 @@ $CACHED-FLUID-TYPES:    fluid-types()    !default;
 
   // Check api name
   $global-options:       global-options();
-  $mapping-names: map-values($fluid-options);
-  @if not ($CACHED-GLOBAL-OPTIONS == $global-options and $CACHED-FLUID-OPTIONS == $fluid-options) {
-    $validate-mapping: check-option("global-options", "$fluid-options", "global name", $global-options, $mapping-names);
+  $mapping-names: map-values($fluid-options-map);
+  @if not ($CACHED-GLOBAL-OPTIONS == $global-options and
+           $CACHED-FLUID-OPTIONS  == $fluid-options-map) {
+    $validate-mapping: check-option("global-options", "$fluid-options-map", "global name",
+                                    $global-options, $mapping-names);
 
     $CACHED-GLOBAL-OPTIONS: $global-options;
-    $CACHED-FLUID-OPTIONS:  $fluid-options;
+    $CACHED-FLUID-OPTIONS:  $fluid-options-map;
   }
 
   $options-keys: map-keys($options);
   @if not contain($CACHED-OPTIONS-KEYS, $options-keys) {
-    $validate-keys: check-option("$fluid-options key", "$options", "key", $fluid-options, $options-keys);
+    $validate-keys: check-option("$fluid-options-map key", "$options", "key",
+                                 $fluid-options-map, $options-keys);
 
     $CACHED-OPTIONS-KEYS: map-merge($CACHED-OPTIONS-KEYS, ($options-keys: true));
   }
