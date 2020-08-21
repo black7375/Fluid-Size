@@ -357,45 +357,44 @@
   @return $new-data;
 }
 
-@function limit-size($size, $max-size, $min-size) {
-  @if not is-null($max-size) {
-    $size: if($size > $max-size, $max-size, $size);
-  }
+@function limit-size($size, $min-size, $max-size) {
   @if not is-null($min-size) {
     $size: if($size < $min-size, $min-size, $size);
+  }
+  @if not is-null($max-size) {
+    $size: if($size > $max-size, $max-size, $size);
   }
 
   @return $size;
 }
-
-@function limit-sizes($sizes, $max-size, $min-size) {
+@function limit-sizes($sizes, $min-size, $max-size) {
   $sizes:    to-unit-data($sizes,    px);
-  $max-size: to-unit-data($max-size, px);
   $min-size: to-unit-data($min-size, px);
+  $max-size: to-unit-data($max-size, px);
 
   $new-sizes: ();
   @each $size in $sizes {
-    $new-size: if(is-len($size), limit-size($size, $max-size, $min-size), $size);
+    $new-size: if(is-len($size), limit-size($size, $min-size, $max-size), $size);
     $new-sizes: append($new-sizes, $new-size);
   }
   @return $new-sizes;
 }
 
-@function size-break($function, $fluid-unit, $now-size, $next-size,
-$now-break, $next-break, $max-size: null) {
-  $now-size:   to-unit-data($now-size,   $fluid-unit);
-  $next-size:  to-unit-data($next-size,  $fluid-unit);
+@function size-break($function, $fluid-unit, $now-sizes, $next-sizes,
+                     $now-break, $next-break, $max-size: null) {
+  $now-sizes:  to-unit-data($now-sizes,  $fluid-unit);
+  $next-sizes: to-unit-data($next-sizes, $fluid-unit);
   $now-break:  to-unit-data($now-break,  $fluid-unit);
   $next-break: to-unit-data($next-break, $fluid-unit);
   $max-size:   to-unit-data($max-size,   $fluid-unit);
 
   $check-function: $function == 'fluid-size';
   $args: if($check-function,
-  list($now-size, $next-size, $now-break, $next-break),
-  list($now-size, $next-size, $max-size, $now-break, $next-break));
+            list($now-sizes, $next-sizes, $now-break, $next-break),
+            list($now-sizes, $next-sizes, $max-size,  $now-break, $next-break));
 
   $results: ();
-  $each-sizes: zip($now-size, $next-size);
+  $each-sizes: zip($now-sizes, $next-sizes);
   @each $start-size, $end-size in $each-sizes {
     $result: null;
     @if is-len($start-size) and is-len($end-size) {
@@ -423,8 +422,19 @@ $now-break, $next-break, $max-size: null) {
   }
 }
 
-@function replace-size($sizes, $index, $max-size) {
+@function replace-size($sizes, $index, $subtitute-size) {
   $size: nth($sizes, $index);
   @return if(is-len($size) or is-calc($size),
-             replace-nth($sizes, $index, $max-size), $sizes);
+             replace-nth($sizes, $index, $subtitute-size), $sizes);
+}
+
+@function check-sizes($sizesA, $sizesB) {
+  $sizes: zip($sizesA, $sizesB);
+
+  @each $sizeA, $sizeB in $sizes {
+    @if is-num($sizeA, false) and is-num($sizeB, false) {
+      @return $sizeA <= $sizeB;
+    }
+  }
+  @return false;
 }

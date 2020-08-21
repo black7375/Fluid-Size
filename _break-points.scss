@@ -1,20 +1,20 @@
 // @import 'utils';
 
 // == Break Points =============================================================
-$high-desktop-width:  2560px !default;
-$high-desktop-height: 1440px !default;
-
-$desktop-width:  1920px !default;
-$desktop-height: 1080px !default;
-
-$laptop-width:  1280px !default;
-$laptop-height:  720px !default;
+$phone-width:  480px !default;
+$phone-height: 854px !default;
 
 $tablet-width:   768px !default;
 $tablet-height: 1024px !default;
 
-$phone-width:  480px !default;
-$phone-height: 854px !default;
+$laptop-width:  1280px !default;
+$laptop-height:  720px !default;
+
+$desktop-width:  1920px !default;
+$desktop-height: 1080px !default;
+
+$high-desktop-width:  2560px !default;
+$high-desktop-height: 1440px !default;
 
 $breakpoints: (        // px
   phone:        $phone-width,
@@ -49,11 +49,11 @@ $screen-distances: (   // 10cm
 ) !default;
 
 // Alias
-$high-desktop: $high-desktop-width !default;
-$desktop:      $desktop-width      !default;
-$laptop:       $laptop-width       !default;
-$tablet:       $tablet-width       !default;
 $phone:        $phone-width        !default;
+$tablet:       $tablet-width       !default;
+$laptop:       $laptop-width       !default;
+$desktop:      $desktop-width      !default;
+$high-desktop: $high-desktop-width !default;
 
 // -- Validation ---------------------------------------------------------------
 $CACHED-BREAKPOINTS:        $breakpoints        !default;
