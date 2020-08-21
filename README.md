@@ -42,9 +42,11 @@ npm install @black7375/fluid-size
 Just use the name of the [API](https://github.com/black7375/fluid-size/wiki/API) with `@include`!!
 
 ```scss
-@include font-size($size-value, $max-size-value);
-// or
-@include font-size($size-value, $options);
+tag {
+  @include property($size, $max-size);
+  // or
+  @include property($size, $options);
+}
 ```
 
  **Converted Sample**
