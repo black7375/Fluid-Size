@@ -148,3 +148,10 @@ source: [Legibility: how to make text convenient to read](https://uxdesign.cc/le
 2. Angle calculations in the devices that would look the smallest(or can you specify which device to reference?, [Options:device](https://github.com/black7375/Fluid-Size/wiki/API#2-device))
 3. Generate a `fit size` for each device based on the angle
 4. Provides fluidity between devices
+
+
+## Browser Supports
+
+- [CSS3 Media Queries](https://caniuse.com/#feat=css-mediaqueries)
+- [`vw` unit](https://caniuse.com/#feat=mdn-css_types_length_vw)([Viewport units](https://caniuse.com/#feat=viewport-units))
+- [`calc()`](https://caniuse.com/#feat=calc)
