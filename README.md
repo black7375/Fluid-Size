@@ -43,9 +43,9 @@ Just use the name of the [API](https://github.com/black7375/fluid-size/wiki/API)
 
 ```scss
 tag {
-  @include property($size-value, $max-size-value);
+  @include property($size, $max-size);
   // or
-  @include property($size-value, $options);
+  @include property($size, $options);
 }
 ```
 
