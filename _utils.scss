@@ -40,7 +40,7 @@
 @function replace-nth($list, $index, $value) {
   $result: null;
 
-  @if type-of($index) != number {
+  @if not is-num($index) {
     @warn "$index: #{quote($index)} is not a number for `replace-nth`.";
   } @else if $index == 0 {
     @warn "List index 0 must be a non-zero integer for `replace-nth`.";
@@ -95,7 +95,7 @@
     }
   }
 
-  @return if(type-of($value) != 'list', ($value,), $value);
+  @return if(not is-list($value), ($value,), $value);
 }
 
 @function to-map($keys, $values) {
@@ -256,7 +256,7 @@
       @return contain(map-values($values), $item);
     }
     @else if $type == 'map' {
-      @return map-index($values, $item, 'map') != null;
+      @return not is-null(map-index($values, $item, 'map'));
     }
   }
 }
