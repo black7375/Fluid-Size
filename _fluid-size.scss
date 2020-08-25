@@ -216,6 +216,7 @@ $FIRST-BREAK: default !default;
 
   // add-break: increase => subtitution, decrease => create fluid-size(max, next-size)
   $new-fluid-size: null; // only use decrease
+  $prev-fluid-sizes: null;
   $break-size: length($limit-breaks);
   @each $i in range($limit-breaks) {
     $now-index:  nth($sorted-index, $i);
@@ -241,11 +242,15 @@ $FIRST-BREAK: default !default;
         $subtitue-size: if($increase, $max-size, $new-fluid-size);
         $fluid-sizes: replace-size($fluid-sizes, $now-index, $subtitue-size);
       }
-      @else if $last or not $continuous {
+      @else {
+        $prev-fluid-sizes: $fluid-sizes;
         $subtitue-size: if($increase, $max-size, $new-fluid-size);
         $fluid-sizes: replace-size($fluid-sizes, $now-index, $subtitue-size);
-        @include media(">=#{$now-limit}") {
-          #{$property}: $fluid-sizes;
+
+        @if $last or $fluid-sizes != $prev-fluid-sizes {
+          @include media(">=#{$now-limit}") {
+            #{$property}: $fluid-sizes;
+          }
         }
       }
     }
