@@ -17,3 +17,16 @@ jobs:
       - uses: actions/setup-node@v1
       - run: yarn install
       - run: yarn build
+
+  sync-branch:
+    needs: build
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - name: Merge master -> github-repo
+        uses: mtanzi/action-automerge@v1
+        id: merge
+        with:
+          source: master
+          target: github-repo
+          github_token: ${{secrets.TOKEN_GITHUB}}
