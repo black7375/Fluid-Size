@@ -332,31 +332,6 @@
   @return $result;
 }
 
-@function to-unit-converted($value, $unit) {
-  @return if(is-num($value, false),
-  to-unit($value, $unit), to-unit-data($value, $unit));
-}
-
-@function to-unit-data($data, $unit) {
-  $new-data: ();
-  @if      is-list($data) {
-    @each $value in $data {
-      $converted: to-unit-converted($value, $unit);
-      $new-data: append($new-data, $converted);
-    }
-  }
-  @else if is-map($data) {
-    @each $key, $value in $data {
-      $converted: to-unit-converted($value, $unit);
-      $new-data: map-merge($new-data, ($key: $converted));
-    }
-  }
-  @else {
-    @return if(is-num($data, false), to-unit($data, $unit), $data);
-  }
-  @return $new-data;
-}
-
 @function limit-size($size, $min-size, $max-size) {
   @if not is-null($min-size) {
     $size: if($size < $min-size, $min-size, $size);
@@ -409,17 +384,6 @@
     $results: append($results, $result);
   }
   @return $results;
-}
-
-@function is-calc($value) {
-  @if not is-str($value) {
-    @return false;
-  }
-  @else {
-    $str-front:  str-slice($value, 1, 5) == "calc(";
-    $str-back:   str-slice($value, str-length($value)) == ")";
-    @return $str-front and $str-back;
-  }
 }
 
 @function replace-size($sizes, $index, $subtitute-size) {

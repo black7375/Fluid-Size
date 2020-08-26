@@ -1,6 +1,6 @@
 # Fluid Size
 
-![Logo](https://user-images.githubusercontent.com/25581533/89294723-6d231e80-d64f-11ea-8a67-9333451f467a.png)
+![Logo](https://user-images.githubusercontent.com/25581533/90948604-eda79480-e42f-11ea-836e-1472bdb0d75b.png)
 
 :desktop_computer: :computer::iphone: A method of fluidly resizing in response to various devices. (with SASS) :revolving_hearts: :eyes:
 
@@ -42,9 +42,11 @@ npm install @black7375/fluid-size
 Just use the name of the [API](https://github.com/black7375/fluid-size/wiki/API) with `@include`!!
 
 ```scss
-@include font-size($size-value, $max-size-value);
-// or
-@include font-size($size-value, $options);
+tag {
+  @include property($size, $max-size);
+  // or
+  @include property($size, $options);
+}
 ```
 
  **Converted Sample**
