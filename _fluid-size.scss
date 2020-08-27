@@ -216,6 +216,7 @@ $FIRST-BREAK: default !default;
 
   // add-break: increase => subtitution, decrease => create fluid-size(max, next-size)
   $new-fluid-size: null; // only use decrease
+  $prev-fluid-sizes: null;
   $break-size: length($limit-breaks);
   @each $i in range($limit-breaks) {
     $now-index:  nth($sorted-index, $i);
@@ -241,11 +242,15 @@ $FIRST-BREAK: default !default;
         $subtitue-size: if($increase, $max-size, $new-fluid-size);
         $fluid-sizes: replace-size($fluid-sizes, $now-index, $subtitue-size);
       }
-      @else if $last or not $continuous {
+      @else {
+        $prev-fluid-sizes: $fluid-sizes;
         $subtitue-size: if($increase, $max-size, $new-fluid-size);
         $fluid-sizes: replace-size($fluid-sizes, $now-index, $subtitue-size);
-        @include media(">=#{$now-limit}") {
-          #{$property}: $fluid-sizes;
+
+        @if $last or $fluid-sizes != $prev-fluid-sizes {
+          @include media(">=#{$now-limit}") {
+            #{$property}: $fluid-sizes;
+          }
         }
       }
     }
@@ -304,6 +309,10 @@ $FIRST-BREAK: default !default;
   $now-break:  map-get($fluid-breakpoints, $now-key );
   $next-break: map-get($fluid-breakpoints, $next-key);
 
+  $first: $now-key == $FIRST-BREAK;
+  $prev-key:  if($first, null, map-nth($fluid-breakpoints, $i - 1));
+  $prev-sizes: if(is-null($prev-key), null, map-get($fit-sizes, $prev-key));
+
   // Apply Options
   @if (not is-null($min-size) or not is-null($max-size)) and
       ($fluid-mode == 'fit'   or $limit == 'size') {
@@ -332,22 +341,22 @@ $FIRST-BREAK: default !default;
   }
 
   // Apply Media
-  $first: $now-key == $FIRST-BREAK;
+  $not-continuous: $now-sizes != $prev-sizes;
 
   @if $first {
     #{$property}: $now-sizes;
   }
-  @else if $fluid-mode and not is-null($max-size) {
+  @else if $fluid-mode and not is-null($max-size) and $not-continuous {
     @include fluid-media-limit($property, $now-key, $now-sizes, $next-sizes, $fluid-sizes,
                                $max-size, $next-break, $limit-breaks, $limit-types);
   }
-  @else {
+  @else if $not-continuous {
     $now-values: if($fluid-mode, $fluid-sizes, $now-sizes);
     @include media(">=#{$now-key}") {
       #{$property}: $now-values;
     }
 
-    @if not $fluid-mode and $now-key == $last-key {
+    @if not $fluid-mode and $now-key == $last-key and $now-sizes != $next-sizes {
       @include media(">=#{$next-key}") {
         #{$property}: $next-sizes;
       }

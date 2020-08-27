@@ -54,7 +54,7 @@ tag {
 ```scss
 // Code
 body {
-  @include font-size(16px !important, (unit: em, device: min, max: 25px));
+  @include font-size(16px !important, (unit: px, max: 25px));
 }
 
 /** Tentative Result
@@ -71,43 +71,37 @@ body {
  */
 
 // Result
-body {
-  font-size: 1em !important;
+body {                       // Default  
+  font-size: 16px !important;
 }
 
-@media (min-width: 480px) {  // Phone
+@media (min-width: 480px) {  // Phone ~ Tablet
   body {
-    font-size: calc(-0.95048vw + 1.4568em) !important;
+    font-size: calc(-0.95048vw + 23.30877px) !important;
   }
 }
 
-@media (min-width: 768px) {  // Tablet
+@media (min-width: 768px) {  // Tablet ~ Laptop
   body {
-    font-size: calc(0.14041vw + 0.93317em) !important;
+    font-size: calc(0.14041vw + 14.93074px) !important;
   }
 }
 
-@media (min-width: 1280px) { // Laptop
+@media (min-width: 1280px) { // Laptop ~ Desktop
   body {
-    font-size: calc(0.13069vw + 0.94095em) !important;
+    font-size: calc(0.13069vw + 15.0552px) !important;
   }
 }
 
-@media (min-width: 1920px) { // Desktop
+@media (min-width: 1920px) { // Desktop ~ High-Desktop, Keep going.
   body {
-    font-size: calc(0.50823vw + 0.4879em) !important;
-  }
-}
-
-@media (min-width: 2560px) { // High-Desktop
-  body {
-    font-size: calc(0.50823vw + 0.4879em) !important;
+    font-size: calc(0.50823vw + 7.8064px) !important;
   }
 }
 
 @media (min-width: 3383px) { // Reach maximum size
   body {
-    font-size: 1.5625em !important;
+    font-size: 25px !important;
   }
 }
 ```
@@ -128,6 +122,8 @@ $option2: value2;
 
 // Scoped Option
 tag {
+  @include property($size, $max-size);
+  // or
   @include property($size, (option1: value1, option2: value2));
 }
 ```
@@ -147,7 +143,7 @@ source: [Legibility: how to make text convenient to read](https://uxdesign.cc/le
 ### Calculation process
 
 1. Size specification
-2. Angle calculations in the devices that would look the smallest(or can you specify which device to reference?, [Options:device](https://github.com/black7375/Fluid-Size/wiki/API#2-device))
+2. Angle calculations in the devices that would look the smallest(or can you specify which [device](https://github.com/black7375/Fluid-Size/wiki/API#2-device) to reference?)
 3. Generate a `fit size` for each device based on the angle
 4. Provides fluidity between devices
 
