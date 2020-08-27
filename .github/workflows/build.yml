@@ -9,6 +9,12 @@ on:
     branches: [ master, dev ]
 
 jobs:
+  link-check:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - uses: gaurav-nelson/github-action-markdown-link-check@v1
+
   build:
     name: build
     runs-on: ubuntu-latest
@@ -19,7 +25,7 @@ jobs:
       - run: yarn build
 
   sync-branch:
-    needs: build
+    needs: [ link-check, build ]
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
