@@ -3,7 +3,7 @@
 
 // == Options =================================================================
 // Global Options
-$fls-mode:  fluid !default; // fluid or fit
+$fls-mode:  fluid !default; // fluid or fit, vw-only
 $fls-device:  min !default; // min   or max, devices's key(Ex. phone, tablet, ...)
 $fls-unit:   each !default; // each  or units(Ex. px, em, rem, ...)
 $fls-min:    null !default; // null  or length(Ex. 20px, 20pt, ...)
@@ -40,7 +40,7 @@ $unit-types: map-keys(n-units(0)) !default;
 @function fluid-types() {
 //  Global Name. Types.
   $fluid-types: (
-    mode:        fluid fit,
+    mode:        fluid fit vw-only,
     device:      join(min max, map-keys($breakpoints)),
     unit:        join(each, $unit-types),
     min:         join(null, $unit-types),
