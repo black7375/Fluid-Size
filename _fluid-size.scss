@@ -310,7 +310,7 @@ $FIRST-BREAK: default !default;
   }
 
   @if $exist-add {
-    $increase: check-sizes($now-sizes, $next-sizes);
+    $increase: not $is-fluid or check-sizes($now-sizes, $next-sizes);
 
     // increase: next-size > now-size > max-size
     // decrease: next-size > max-size > now-size
@@ -339,7 +339,11 @@ $FIRST-BREAK: default !default;
   $prev-sizes: if(is-null($prev-key), null, map-get($fit-sizes, $prev-key));
 
   // Apply Options
-  $is-fit: $fluid-mode == 'fit';
+  $is-fit:   $fluid-mode == 'fit';
+  $is-fluid: $fluid-mode == 'fluid';
+  $is-vw:    $fluid-mode == 'vw-only';
+  $is-last:  if($is-fluid, $now-key == $last-key, $next-key == $last-key);
+
   @if (not is-null($min-size) or not is-null($max-size)) and
       ($is-fit                or $limit == 'size') {
     $now-sizes:  limit-sizes($now-sizes,  $min-size, $max-size);
@@ -347,7 +351,6 @@ $FIRST-BREAK: default !default;
   }
 
   // for fluid mode
-  $is-fluid:   $fluid-mode == 'fluid'; // else is 'fit'
   $limit-breaks: null;
   $limit-types:  null;
   $fluid-sizes:  null;
@@ -386,9 +389,11 @@ $FIRST-BREAK: default !default;
       #{$property}: $now-values;
     }
 
-    @if $is-fit and $now-key == $last-key and $now-sizes != $next-sizes {
+    // Last at fit, vw-only mode
+    $next-values: if($is-fit, $next-sizes, vw-sizes($next-sizes, $next-break));
+    @if not $is-fluid and $is-last and $now-sizes != $next-sizes {
       @include media(">=#{$next-key}") {
-        #{$property}: $next-sizes;
+        #{$property}: $next-values;
       }
     }
   }
@@ -415,7 +420,8 @@ $FIRST-BREAK: default !default;
 
   // Apply media
   $last-size: length($fluid-breakpoints) - 1;
-  $last-key:  map-nth($fluid-breakpoints, $last-size);
+  $last-key:  map-nth($fluid-breakpoints, if($fluid-mode == 'fluid',
+                                             $last-size, $last-size + 1));
   @each $i in range($last-size) {
     $fluid-context: ($i, $last-key);
     $args: flatten($fluid-basics, $fluid-context, $fluid-options);
