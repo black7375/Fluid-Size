@@ -132,8 +132,8 @@ $CACHED-FLUID-TYPES:    fluid-types()      !default;
     $validate-mapping: check-option("global-options", "$fluid-options-map", "global name",
                                     $global-options, $mapping-names);
 
-    $CACHED-GLOBAL-OPTIONS: $global-options;
-    $CACHED-FLUID-OPTIONS:  $fluid-options-map;
+    $CACHED-GLOBAL-OPTIONS: $global-options    !global;
+    $CACHED-FLUID-OPTIONS:  $fluid-options-map !global;
   }
 
   $options-keys: map-keys($options);
@@ -141,7 +141,7 @@ $CACHED-FLUID-TYPES:    fluid-types()      !default;
     $validate-keys: check-option("$fluid-options-map key", "$options", "key",
                                  $fluid-options-map, $options-keys);
 
-    $CACHED-OPTIONS-KEYS: map-merge($CACHED-OPTIONS-KEYS, ($options-keys: true));
+    $CACHED-OPTIONS-KEYS: map-merge($CACHED-OPTIONS-KEYS, ($options-keys: true)) !global;
   }
 
   // Check each type
@@ -163,8 +163,8 @@ $CACHED-FLUID-TYPES:    fluid-types()      !default;
       }
     }
 
-    $CACHED-ALL-OPTIONS: $all-options;
-    $CACHED-FLUID-TYPES: $fluid-types;
+    $CACHED-ALL-OPTIONS: $all-options !global;
+    $CACHED-FLUID-TYPES: $fluid-types !global;
   }
 
   @return $validate-mapping and $validate-keys and $validate-types;

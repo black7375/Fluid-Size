@@ -100,10 +100,10 @@ $CACHED-SCREEN-DISTANCES:   $screen-distances   !default;
     $others-keys: $breakpoints-height-keys $screen-sizes-keys $screen-distances-keys;
     $validate-breakpoints: check-breakpoints("$breakpoints", $others-name, $breakpoints-keys, $others-keys);
 
-    $CACHED-BREAKPOINTS:        $breakpoints;
-    $CACHED-BREAKPOINTS-HEIGHT: $breakpoints-height;
-    $CACHED-SCREEN-SIZES:       $screen-sizes;
-    $CACHED-SCREEN-DISTANCES:   $screen-distances;
+    $CACHED-BREAKPOINTS:        $breakpoints        !global;
+    $CACHED-BREAKPOINTS-HEIGHT: $breakpoints-height !global;
+    $CACHED-SCREEN-SIZES:       $screen-sizes       !global;
+    $CACHED-SCREEN-DISTANCES:   $screen-distances   !global;
   }
 
   @return $validate-breakpoints;
