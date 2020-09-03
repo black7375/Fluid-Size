@@ -3,7 +3,7 @@
 
 // == Options =================================================================
 // Global Options
-$fls-mode:  fluid !default; // fluid or fit
+$fls-mode:  fluid !default; // fluid or fit, vw-only
 $fls-device:  min !default; // min   or max, devices's key(Ex. phone, tablet, ...)
 $fls-unit:   each !default; // each  or units(Ex. px, em, rem, ...)
 $fls-min:    null !default; // null  or length(Ex. 20px, 20pt, ...)
@@ -40,7 +40,7 @@ $unit-types: map-keys(n-units(0)) !default;
 @function fluid-types() {
 //  Global Name. Types.
   $fluid-types: (
-    mode:        fluid fit,
+    mode:        fluid fit vw-only,
     device:      join(min max, map-keys($breakpoints)),
     unit:        join(each, $unit-types),
     min:         join(null, $unit-types),
@@ -132,8 +132,8 @@ $CACHED-FLUID-TYPES:    fluid-types()      !default;
     $validate-mapping: check-option("global-options", "$fluid-options-map", "global name",
                                     $global-options, $mapping-names);
 
-    $CACHED-GLOBAL-OPTIONS: $global-options;
-    $CACHED-FLUID-OPTIONS:  $fluid-options-map;
+    $CACHED-GLOBAL-OPTIONS: $global-options    !global;
+    $CACHED-FLUID-OPTIONS:  $fluid-options-map !global;
   }
 
   $options-keys: map-keys($options);
@@ -141,7 +141,7 @@ $CACHED-FLUID-TYPES:    fluid-types()      !default;
     $validate-keys: check-option("$fluid-options-map key", "$options", "key",
                                  $fluid-options-map, $options-keys);
 
-    $CACHED-OPTIONS-KEYS: map-merge($CACHED-OPTIONS-KEYS, ($options-keys: true));
+    $CACHED-OPTIONS-KEYS: map-merge($CACHED-OPTIONS-KEYS, ($options-keys: true)) !global;
   }
 
   // Check each type
@@ -163,8 +163,8 @@ $CACHED-FLUID-TYPES:    fluid-types()      !default;
       }
     }
 
-    $CACHED-ALL-OPTIONS: $all-options;
-    $CACHED-FLUID-TYPES: $fluid-types;
+    $CACHED-ALL-OPTIONS: $all-options !global;
+    $CACHED-FLUID-TYPES: $fluid-types !global;
   }
 
   @return $validate-mapping and $validate-keys and $validate-types;
