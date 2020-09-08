@@ -1,5 +1,10 @@
 # Fluid Size
 
+[![GitHub Workflow CI  Status](https://img.shields.io/github/workflow/status/black7375/Fluid-Size/CI)](https://github.com/black7375/Fluid-Size/actions?query=workflow%3ACI)
+[![GitHub Workflow Publishing Status](https://img.shields.io/github/workflow/status/black7375/Fluid-Size/Publishing?label=Publishing)](https://github.com/black7375/Fluid-Size/actions?query=workflow%3APublishing)
+[![npm](https://img.shields.io/npm/v/fluid-size?color=%23CC3534&logo=npm)](https://www.npmjs.com/package/fluid-size) 
+[![gpr](https://img.shields.io/github/v/release/black7375/Fluid-Size?color=%23117FFF&label=GPR&logo=github)](https://github.com/black7375/Fluid-Size/packages/336258)
+
 ![Logo](https://user-images.githubusercontent.com/25581533/90948604-eda79480-e42f-11ea-836e-1472bdb0d75b.png)
 
 :desktop_computer: :computer::iphone: A method of fluidly resizing in response to various devices. (with SASS) :revolving_hearts: :eyes:
