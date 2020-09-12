@@ -59,7 +59,7 @@ tag {
 ```scss
 // Code
 body {
-  @include font-size(16px !important, (unit: px, max: 25px));
+  @include font-size(16px);
 }
 
 /** Tentative Result
@@ -74,6 +74,68 @@ body {
  * Desktop:      about 17.56px;
  * High-Desktop: about 20.82px;
  */
+
+// Result
+body {                       // Default  
+  font-size: 1rem;
+}
+
+@media (min-width: 480px) {  // Phone ~ Tablet
+  body {
+    font-size: calc(-0.9504790795vw + 1.4567984055rem);
+  }
+}
+
+@media (min-width: 768px) {  // Tablet ~ Laptop
+  body {
+    font-size: calc(0.1404102228vw + 0.9331715404rem);
+  }
+}
+
+@media (min-width: 1280px) { // Laptop ~ Desktop
+  body {
+    font-size: calc(0.1306874648vw + 0.9409497468rem);
+  }
+}
+
+@media (min-width: 1920px) { // Desktop ~ High-Desktop, Keep going.
+  body {
+    font-size: calc(0.5082290299vw + 0.4878998687rem);
+  }
+}
+```
+
+### Options
+
+[Wiki:API(Options)](https://github.com/black7375/fluid-size/wiki/API#options)
+
+Options consist of global and scoped options.
+
+- Global Option: Setting it as a `variable` changes the default value of the whole.
+- Scoped Option: It is provided as an argument(`map` type) to the function, and when used, applies only to the current value.
+
+```scss
+// Global Option
+$option1: value1;
+$option2: value2;
+
+// Scoped Option
+tag {
+  @include property($size, $max-size);
+  // or
+  @include property($size, (option1: value1, option2: value2));
+}
+```
+
+You can customize resizing method, result's unit, min or max size, ..etc.
+
+ **Converted Sample**
+
+```scss
+// Code
+body {
+  @include font-size(16px !important, (unit: px, max: 25px));
+}
 
 // Result
 body {                       // Default  
@@ -110,30 +172,6 @@ body {                       // Default
   }
 }
 ```
-
-### Options
-
-[Wiki:API(Options)](https://github.com/black7375/fluid-size/wiki/API#options)
-
-Options consist of global and scoped options.
-
-- Global Option: Setting it as a `variable` changes the default value of the whole.
-- Scoped Option: It is provided as an argument(`map` type) to the function, and when used, applies only to the current value.
-
-```scss
-// Global Option
-$option1: value1;
-$option2: value2;
-
-// Scoped Option
-tag {
-  @include property($size, $max-size);
-  // or
-  @include property($size, (option1: value1, option2: value2));
-}
-```
-
-You can customize resizing method, result's unit, min or max size, ..etc.
 
 ## Learn More
 [Wiki:The theory of font size and readability](https://github.com/black7375/fluid-size/wiki/The-theory-of-font-size-and-readability)
