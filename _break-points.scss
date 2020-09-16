@@ -1,6 +1,6 @@
 // @import 'utils';
 
-// == Break Points =============================================================
+// ** Break Points *************************************************************
 $phone-width:  480px !default;
 $phone-height: 854px !default;
 
@@ -55,7 +55,7 @@ $laptop:       $laptop-width       !default;
 $desktop:      $desktop-width      !default;
 $high-desktop: $high-desktop-width !default;
 
-// -- Validation ---------------------------------------------------------------
+// == Validation ===============================================================
 $CACHED-BREAKPOINTS:        $breakpoints        !default;
 $CACHED-BREAKPOINTS-HEIGHT: $breakpoints-height !default;
 $CACHED-SCREEN-SIZES:       $screen-sizes       !default;
@@ -84,6 +84,7 @@ $CACHED-SCREEN-DISTANCES:   $screen-distances   !default;
   @return $validate-breakpoints;
 }
 
+// -- Interface --
 @function validate-breakpoints() {
   $validate-breakpoints: true;
 

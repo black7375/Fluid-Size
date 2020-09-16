@@ -1,8 +1,8 @@
 // @import '~sass-unitconverter/unitconverter';
 // @import 'utils';
 
-// == Options =================================================================
-// Global Options
+// ** Options ******************************************************************
+// == Global Options ===========================================================
 $fls-mode:  fluid !default; // fluid or fit, vw-only
 $fls-device:  min !default; // min   or max, devices's key(Ex. phone, tablet, ...)
 $fls-unit:   each !default; // each  or units(Ex. px, em, rem, ...)
@@ -10,9 +10,11 @@ $fls-min:    null !default; // null  or length(Ex. 20px, 20pt, ...)
 $fls-max:    null !default; // null  or length(Ex. 20px, 20pt, ...)
 $fls-limit:  size !default; // size  or break
 
+// == Mapping ==================================================================
+// -- Mapping with API Name --
 @function global-options() {
-//  Global Name. Global Variable.
   $global-options: (
+//  Global Name. Global Variable.
     mode:        $fls-mode,
     device:      $fls-device,
     unit:        $fls-unit,
@@ -23,9 +25,9 @@ $fls-limit:  size !default; // size  or break
   @return $global-options;
 }
 
-// Mapping with Scoped Options
-// Scoped Name. Global Name.
+// -- Mapping with Scoped Options --
 $fluid-options-map: (
+// Scoped Name. Global Name.
    mode:        mode,
    device:      device,
    unit:        unit,
@@ -36,10 +38,11 @@ $fluid-options-map: (
    limit:       limit,
 );
 
+// -- Mapping with Types --
 $unit-types: map-keys(n-units(0)) !default;
 @function fluid-types() {
-//  Global Name. Types.
   $fluid-types: (
+//  Global Name. Types.
     mode:        fluid fit vw-only,
     device:      join(min max, map-keys($breakpoints)),
     unit:        join(each, $unit-types),
@@ -50,7 +53,7 @@ $unit-types: map-keys(n-units(0)) !default;
   @return $fluid-types;
 }
 
-// -- Get ----------------------------------------------------------------------
+// == Get ======================================================================
 @function scoped-convert($scoped-options) {
   @if length($scoped-options) == 0 {
     @return ();
@@ -78,6 +81,7 @@ $unit-types: map-keys(n-units(0)) !default;
   @return $result;
 }
 
+// -- Interface --
 @function get-option($options: (), $name: all) {
   $scoped: scoped-convert($options);
   $result: ();
@@ -102,7 +106,7 @@ $unit-types: map-keys(n-units(0)) !default;
   @return $result;
 }
 
-// -- Validation ---------------------------------------------------------------
+// == Validation ===============================================================
 $CACHED-GLOBAL-OPTIONS: global-options()   !default;
 $CACHED-FLUID-OPTIONS:  $fluid-options-map !default;
 $CACHED-OPTIONS-KEYS:   ()                 !default;
@@ -119,6 +123,7 @@ $CACHED-FLUID-TYPES:    fluid-types()      !default;
   @return true;
 }
 
+// -- Interface --
 @function validate-options($options: ()) {
   $validate-mapping: false;
   $validate-keys:    false;

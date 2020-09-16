@@ -17,7 +17,7 @@
 @import 'utils';
 @import 'options';
 
-// == Fluid Size ===============================================================
+// ** Fluid Size ***************************************************************
 $FIRST-BREAK: default !default;
 
 @function zip-responsive() {
@@ -27,12 +27,14 @@ $FIRST-BREAK: default !default;
   );
 }
 
-// -- Fit Size -----------------------------------------------------------------
+// == Fit Size =================================================================
+// Based on Theory
 // https://github.com/black7375/Fluid-Size/wiki/The-theory-of-font-size-and-readability
 @function calc-ppi($screen-width, $screen-height, $screen-size) {
   @return sqrt(pow($screen-width, 2) + pow($screen-height, 2)) / $screen-size;
 }
 
+// -- Measure Angle ------------------------------------------------------------
 @function calc-dependency($value) {
   $screen-distance: nth($value, 1) * 100;
   $screen-size:     nth($value, 2);
@@ -88,6 +90,7 @@ $FIRST-BREAK: default !default;
   @return $angles;
 }
 
+// -- Generate Fit Size --------------------------------------------------------
 @function calc-size($visual-angle) {
   $check:       is-num($visual-angle);
   $values:      zip-responsive();
@@ -123,8 +126,9 @@ $FIRST-BREAK: default !default;
   @return if(is-list($sizes), call(zip, $scaled-sizes...), $scaled-sizes);
 }
 
-// -- Fluid --------------------------------------------------------------------
-// -- Fluid Size --
+// == Fluid ====================================================================
+// -- Option::Mode -------------------------------------------------------------
+// -- Mode: Fluid --
 // https://www.madebymike.com.au/writing/fluid-type-calc-examples/
 @function fluid-rate($start-size, $end-size, $min-screen, $max-screen) {
   @return ($end-size - $start-size) / ($max-screen - $min-screen);
@@ -153,11 +157,13 @@ $FIRST-BREAK: default !default;
   @return $fluid-sizes;
 }
 
+// -- Mode: VW-Only --
 @function vw-sizes($now-sizes, $now-break) {
   @return to-unit-data($now-sizes, vw, $now-break);
 }
 
-// -- Fluid Limit Break --
+// -- Option::Limit ------------------------------------------------------------
+// -- Limit with Mode --
 @function fluid-limit-break($start-size, $end-size, $max-size,
                             $min-screen, $max-screen) {
   @if($start-size == $end-size) {
@@ -198,6 +204,7 @@ $FIRST-BREAK: default !default;
   @return $limit-breaks;
 }
 
+// -- Get Limit Types --
 @function fluid-limit-type($first, $last, $now-break, $next-break,
                            $limit-break, $type: 'size') {
   @if $type == 'break' {
@@ -233,6 +240,7 @@ $FIRST-BREAK: default !default;
   @return $limit-types;
 }
 
+// -- Limit --
 @mixin fluid-add-break($property, $now-key, $next-sizes, $fluid-sizes, $max-size,
                        $next-break, $limit-breaks, $limit-types, $sorted-index, $increase) {
   $decrease: not $increase;
@@ -333,7 +341,7 @@ $FIRST-BREAK: default !default;
   }
 }
 
-// -- Medias -------------------------------------------------------------------
+// == Medias ===================================================================
 @mixin fluid-media-apply($property, $fit-sizes, $fluid-breakpoints, $i, $last-key,
                          $fluid-mode, $fluid-unit, $min-size, $max-size, $limit) {
   // Get key and Sizes
@@ -452,6 +460,7 @@ $FIRST-BREAK: default !default;
   }
 }
 
+// -- Syntax Sugar --
 @mixin fluid($property, $sizes, $options: empty-map(), $type: 'font') {
   // Preprocessing for $options
   @if not is-map($options) {
@@ -481,8 +490,8 @@ $FIRST-BREAK: default !default;
   @include fluid-media($property, $devices-sizes, $options);
 }
 
-// -- Interface ----------------------------------------------------------------
-// Font
+// == Interface ================================================================
+// -- Font --
 @mixin font-size($sizes, $options: empty-map()) {
   @include fluid(font-size, $sizes, $options);
 }
@@ -502,7 +511,7 @@ $FIRST-BREAK: default !default;
   @include fluid(tab-size, $sizes, $options);
 }
 
-// Box
+// -- Box --
 @mixin width($sizes, $options: empty-map()) {
   @include fluid(width, $sizes, $options, 'box');
 }

@@ -1,8 +1,9 @@
 // @import '~mathsass/dist/math';
 // @import '~sass-unitconverter/unitconverter';
 
-// == Utils ====================================================================
-// -- Data Structure -----------------------------------------------------------
+// ** Utils ********************************************************************
+// == Data Structure ===========================================================
+// -- List ---------------------------------------------------------------------
 @function range($values) {
   $iter-num: 0;
   $range-list: ();
@@ -73,6 +74,7 @@
   @return $newList;
 }
 
+// -- Convert ------------------------------------------------------------------
 // https://hugogiraudel.com/2014/04/28/casting-map-into-list/
 @function to-list($value, $keep: 'both') {
   $keep: if(index('keys' 'values', $keep), $keep, 'both');
@@ -112,6 +114,7 @@
   @return map-remove(($x:$x), $x);
 }
 
+// -- Map ----------------------------------------------------------------------
 @function map-index($map, $key-value, $type: 'key') {
   @if      $type == 'key'   {
     @return index(map-keys($map),   $key-value);
@@ -133,6 +136,7 @@
   }
 }
 
+// -- Sort ---------------------------------------------------------------------
 // https://gist.github.com/Jakobud/744b98b629abe018766f6d506a2e92ae
 // https://css-tricks.com/snippets/sass/sorting-function/
 @function sort-compare($a, $b) {
@@ -244,6 +248,7 @@
   @return $sortedMap;
 }
 
+// -- Others -------------------------------------------------------------------
 @function contain($values, $item, $type: 'key') {
   @if      is-list($values) {
     @return index($values, $item) != null;
@@ -304,7 +309,7 @@
   }
 }
 
-// -- Math ---------------------------------------------------------------------
+// == Math =====================================================================
 @function count-round($number, $count: 1) {
   $digit: pow(10, $count - 1);
 
@@ -313,7 +318,8 @@
   @return $round / $digit;
 }
 
-// -- Other --------------------------------------------------------------------
+// == Other ====================================================================
+// -- High Order ---------------------------------------------------------------
 @function do($value, $functions...) {
   $result: $value;
   $functions: flatten($functions...);
@@ -332,6 +338,7 @@
   @return $result;
 }
 
+// -- Size ---------------------------------------------------------------------
 @function limit-size($size, $min-size, $max-size) {
   @if not is-null($min-size) {
     $size: if($size < $min-size, $min-size, $size);
