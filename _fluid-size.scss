@@ -163,6 +163,37 @@ $FIRST-BREAK: default !default;
 }
 
 // -- Option::Limit ------------------------------------------------------------
+@function size-break($function, $fluid-unit, $now-sizes, $next-sizes,
+                     $now-break, $next-break, $max-size: null) {
+  $now-sizes:  to-unit-data($now-sizes,  $fluid-unit);
+  $next-sizes: to-unit-data($next-sizes, $fluid-unit);
+  $now-break:  to-unit-data($now-break,  $fluid-unit);
+  $next-break: to-unit-data($next-break, $fluid-unit);
+  $max-size:   to-unit-data($max-size,   $fluid-unit);
+
+  $check-function: $function == 'fluid-size';
+  $args: if($check-function,
+            list($now-sizes, $next-sizes, $now-break, $next-break),
+            list($now-sizes, $next-sizes, $max-size,  $now-break, $next-break));
+
+  $results: ();
+  $each-sizes: zip($now-sizes, $next-sizes);
+  @each $start-size, $end-size in $each-sizes {
+    $result: null;
+    @if is-len($start-size) and is-len($end-size) {
+      $args: replace-nth($args, 1, $start-size);
+      $args: replace-nth($args, 2, $end-size  );
+
+      $result: map($args, $function, 'list');
+    }
+    @else {
+      $result: if($check-function, $start-size, $next-break);
+    }
+    $results: append($results, $result);
+  }
+  @return $results;
+}
+
 // -- Limit with Mode --
 @function fluid-limit-break($start-size, $end-size, $max-size,
                             $min-screen, $max-screen) {
