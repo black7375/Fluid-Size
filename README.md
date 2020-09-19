@@ -16,6 +16,9 @@ Get away from the effects of devices' ***distance***, ***size***, and ***resolut
 - [Demo(Simple ToDo App)](https://black7375.github.io/React-RxJS-Todo/)
 
 ## Advantages
+
+[Wiki:Comparison](https://github.com/black7375/Fluid-Size/wiki/Comparison)
+
 - Easy
 - Provides the `fit size` for each device
 - Resized `fluidly` between each device
@@ -49,6 +52,24 @@ Just use the name of the [API](https://github.com/black7375/fluid-size/wiki/API)
 ```scss
 tag {
   @include property($size);
+}
+```
+
+**Example**
+
+You can use the regular CSS as it is.
+```scss
+// Only Single Value
+body {
+  @include font-size(16px);       // Countable Value    => Calculated
+  @include text-indent(inherit);  // Uncalculated Value => Passed
+}
+
+// List Value
+body {
+  @include font-size(16px !important);         // with Uncountable Value
+  @include text-indent(5em hanging each-line); // with Multiple Uncountable Values
+  @include margin(-3px 1em auto);              // with Mixed Value
 }
 ```
 
