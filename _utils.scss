@@ -1,8 +1,10 @@
 // @import '~mathsass/dist/math';
 // @import '~sass-unitconverter/unitconverter';
 
-// == Utils ====================================================================
-// -- Data Structure -----------------------------------------------------------
+// ** Utils ********************************************************************
+// == Data Structure ===========================================================
+// -- List ---------------------------------------------------------------------
+// -- To List --
 @function range($values) {
   $iter-num: 0;
   $range-list: ();
@@ -34,6 +36,39 @@
     $list: append($list, $arg);
   }
   @return $list;
+}
+
+@function flatten($list...) {
+  $newList: ();
+  @each $value in $list {
+    @if is-list($value) {
+      @each $deepV in $value {
+        $newList: append($newList, $deepV);
+      }
+    }
+    @else {
+      $newList: append($newList, $value);
+    }
+  }
+  @return $newList;
+}
+
+// -- At List --
+@function contain($values, $item, $type: 'key') {
+  @if      is-list($values) {
+    @return index($values, $item) != null;
+  }
+  @else if is-map($values) {
+    @if      $type == 'key' {
+      @return map-has-key($values, $item);
+    }
+    @else if $type == 'value' {
+      @return contain(map-values($values), $item);
+    }
+    @else if $type == 'map' {
+      @return not is-null(map-index($values, $item, 'map'));
+    }
+  }
 }
 
 // https://hugogiraudel.com/2013/08/08/advanced-sass-list-functions/
@@ -73,6 +108,29 @@
   @return $newList;
 }
 
+// -- Map ----------------------------------------------------------------------
+@function map-index($map, $key-value, $type: 'key') {
+  @if      $type == 'key'   {
+    @return index(map-keys($map),   $key-value);
+  }
+  @else if $type == 'value' {
+    @return index(map-values($map), $key-value);
+  }
+  @else if $type == 'map'   {
+    @return index($map, to-list($key-value));
+  }
+}
+
+@function map-nth($map, $n, $type: 'key') {
+  @if      $type == 'key'   {
+    @return nth(nth($map, $n), 1);
+  }
+  @else if $type == 'value' {
+    @return nth(nth($map, $n), 2);
+  }
+}
+
+// -- Convert ------------------------------------------------------------------
 // https://hugogiraudel.com/2014/04/28/casting-map-into-list/
 @function to-list($value, $keep: 'both') {
   $keep: if(index('keys' 'values', $keep), $keep, 'both');
@@ -112,27 +170,7 @@
   @return map-remove(($x:$x), $x);
 }
 
-@function map-index($map, $key-value, $type: 'key') {
-  @if      $type == 'key'   {
-    @return index(map-keys($map),   $key-value);
-  }
-  @else if $type == 'value' {
-    @return index(map-values($map), $key-value);
-  }
-  @else if $type == 'map'   {
-    @return index($map, to-list($key-value));
-  }
-}
-
-@function map-nth($map, $n, $type: 'key') {
-  @if      $type == 'key'   {
-    @return nth(nth($map, $n), 1);
-  }
-  @else if $type == 'value' {
-    @return nth(nth($map, $n), 2);
-  }
-}
-
+// -- Sort ---------------------------------------------------------------------
 // https://gist.github.com/Jakobud/744b98b629abe018766f6d506a2e92ae
 // https://css-tricks.com/snippets/sass/sorting-function/
 @function sort-compare($a, $b) {
@@ -160,6 +198,7 @@
   @return str-length($a) < str-length($b);
 }
 
+// -- List --
 @function list-sort($list) {
   $sortedlist: ();
   @while length($list) > 0 {
@@ -190,6 +229,7 @@
   @return flatten(map-values($sortedMap)...);
 }
 
+// -- Map --
 // https://gist.github.com/Jakobud/a0ac11e80a1de453cd86f0d3fc0a1410
 @function map-sort($map) {
   $keys: list-sort(map-keys($map));
@@ -244,36 +284,33 @@
   @return $sortedMap;
 }
 
-@function contain($values, $item, $type: 'key') {
-  @if      is-list($values) {
-    @return index($values, $item) != null;
-  }
-  @else if is-map($values) {
-    @if      $type == 'key' {
-      @return map-has-key($values, $item);
-    }
-    @else if $type == 'value' {
-      @return contain(map-values($values), $item);
-    }
-    @else if $type == 'map' {
-      @return not is-null(map-index($values, $item, 'map'));
-    }
-  }
+// == Math =====================================================================
+@function count-round($number, $count: 1) {
+  $digit: pow(10, $count - 1);
+
+  $upper: $number * $digit;
+  $round: floor($upper + 0.5);
+  @return $round / $digit;
 }
 
-@function flatten($list...) {
-  $newList: ();
-  @each $value in $list {
-    @if is-list($value) {
-      @each $deepV in $value {
-        $newList: append($newList, $deepV);
-      }
-    }
-    @else {
-      $newList: append($newList, $value);
-    }
+// == Other ====================================================================
+// -- High Order ---------------------------------------------------------------
+@function do($value, $functions...) {
+  $result: $value;
+  $functions: flatten($functions...);
+  @each $function in $functions {
+    $result: call($function, $result);
   }
-  @return $newList;
+  @return $result;
+}
+
+@function do-list($value, $functions...) {
+  $result: $value;
+  $functions: flatten($functions...);
+  @each $function in $functions {
+    $result: call($function, $result...);
+  }
+  @return $result;
 }
 
 @function map($values, $function, $type: 'value', $separator: auto) {
@@ -304,34 +341,7 @@
   }
 }
 
-// -- Math ---------------------------------------------------------------------
-@function count-round($number, $count: 1) {
-  $digit: pow(10, $count - 1);
-
-  $upper: $number * $digit;
-  $round: floor($upper + 0.5);
-  @return $round / $digit;
-}
-
-// -- Other --------------------------------------------------------------------
-@function do($value, $functions...) {
-  $result: $value;
-  $functions: flatten($functions...);
-  @each $function in $functions {
-    $result: call($function, $result);
-  }
-  @return $result;
-}
-
-@function do-list($value, $functions...) {
-  $result: $value;
-  $functions: flatten($functions...);
-  @each $function in $functions {
-    $result: call($function, $result...);
-  }
-  @return $result;
-}
-
+// -- Size ---------------------------------------------------------------------
 @function limit-size($size, $min-size, $max-size) {
   @if not is-null($min-size) {
     $size: if($size < $min-size, $min-size, $size);
@@ -353,37 +363,6 @@
     $new-sizes: append($new-sizes, $new-size);
   }
   @return $new-sizes;
-}
-
-@function size-break($function, $fluid-unit, $now-sizes, $next-sizes,
-                     $now-break, $next-break, $max-size: null) {
-  $now-sizes:  to-unit-data($now-sizes,  $fluid-unit);
-  $next-sizes: to-unit-data($next-sizes, $fluid-unit);
-  $now-break:  to-unit-data($now-break,  $fluid-unit);
-  $next-break: to-unit-data($next-break, $fluid-unit);
-  $max-size:   to-unit-data($max-size,   $fluid-unit);
-
-  $check-function: $function == 'fluid-size';
-  $args: if($check-function,
-            list($now-sizes, $next-sizes, $now-break, $next-break),
-            list($now-sizes, $next-sizes, $max-size,  $now-break, $next-break));
-
-  $results: ();
-  $each-sizes: zip($now-sizes, $next-sizes);
-  @each $start-size, $end-size in $each-sizes {
-    $result: null;
-    @if is-len($start-size) and is-len($end-size) {
-      $args: replace-nth($args, 1, $start-size);
-      $args: replace-nth($args, 2, $end-size  );
-
-      $result: map($args, $function, 'list');
-    }
-    @else {
-      $result: if($check-function, $start-size, $next-break);
-    }
-    $results: append($results, $result);
-  }
-  @return $results;
 }
 
 @function replace-size($sizes, $index, $subtitute-size) {

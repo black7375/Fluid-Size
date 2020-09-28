@@ -5,17 +5,20 @@
 [![npm](https://img.shields.io/npm/v/fluid-size?color=%23CC3534&logo=npm)](https://www.npmjs.com/package/fluid-size) 
 [![gpr](https://img.shields.io/github/v/release/black7375/Fluid-Size?color=%23117FFF&label=GPR&logo=github)](https://github.com/black7375/Fluid-Size/packages/336258)
 
-![Logo](https://user-images.githubusercontent.com/25581533/90948604-eda79480-e42f-11ea-836e-1472bdb0d75b.png)
+![Fluid-Size](https://raw.githubusercontent.com/black7375/Fluid-Size/resource/resource/Fluid-Size.png)
 
-:desktop_computer: :computer::iphone: A method of fluidly resizing in response to various devices. (with SASS) :revolving_hearts: :eyes:
+:triangular_ruler::iphone::computer::desktop_computer: A method of fluidly resizing in various devices based on [`visual angle`](https://en.wikipedia.org/wiki/Visual_angle). (with SASS) :revolving_hearts: :eyes:
 
-It is a way to respond to the distance between the eye and the device, the size and resolution of the device.
+Get away from the effects of devices' ***distance***, ***size***, and ***resolution***!!
 
 ![fluid-font-size](https://user-images.githubusercontent.com/25581533/82766346-d8f63900-9e0d-11ea-9b3b-ceabd7832e4b.png)
 - [Demo(Codepen)](https://codepen.io/black7375/pen/xxZoyow?editors=1100)
 - [Demo(Simple ToDo App)](https://black7375.github.io/React-RxJS-Todo/)
 
 ## Advantages
+
+[Wiki:Comparison](https://github.com/black7375/Fluid-Size/wiki/Comparison)
+
 - Easy
 - Provides the `fit size` for each device
 - Resized `fluidly` between each device
@@ -48,9 +51,25 @@ Just use the name of the [API](https://github.com/black7375/fluid-size/wiki/API)
 
 ```scss
 tag {
-  @include property($size, $max-size);
-  // or
-  @include property($size, $options);
+  @include property($size);
+}
+```
+
+**Example**
+
+You can use the regular CSS as it is.
+```scss
+// Only Single Value
+body {
+  @include font-size(16px);       // Countable Value    => Calculated
+  @include text-indent(inherit);  // Uncalculated Value => Passed
+}
+
+// List Value
+body {
+  @include font-size(16px !important);         // with Uncountable Value
+  @include text-indent(5em hanging each-line); // with Multiple Uncountable Values
+  @include margin(-3px 1em auto);              // with Mixed Value
 }
 ```
 
@@ -76,7 +95,7 @@ body {
  */
 
 // Result
-body {                       // Default  
+body {                       // Default
   font-size: 1rem;
 }
 
@@ -138,7 +157,7 @@ body {
 }
 
 // Result
-body {                       // Default  
+body {                       // Default
   font-size: 16px !important;
 }
 
@@ -186,10 +205,9 @@ source: [Legibility: how to make text convenient to read](https://uxdesign.cc/le
 ### Calculation process
 
 1. Size specification
-2. Angle calculations in the devices that would look the smallest(or can you specify which [device](https://github.com/black7375/Fluid-Size/wiki/API#2-device) to reference?)
-3. Generate a `fit size` for each device based on the angle
-4. Provides fluidity between devices
-
+2. Measure the `angle` to be viewed on the [reference device](https://github.com/black7375/Fluid-Size/wiki/API#2-device)
+3. Generate a `fit size` for each device based on the `angle`
+4. Provides **real-time resizing(fluidity)** for mid-range devices
 
 ## Browser Supports
 
