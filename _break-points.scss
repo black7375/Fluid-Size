@@ -71,11 +71,13 @@ $CACHED-SCREEN-DISTANCES:   $screen-distances   !default;
     $other-keys:   nth($others-keys, $i);
     $other-length: length($other-keys);
 
+    // Length Check
     $validate-breakpoints: $validate-breakpoints and $criteria-length == $other-length;
     @if not $validate-breakpoints {
       @error "#{$criteria-name}'s length doesn't same #{$other-name}'s length";
     }
 
+    // Key Check
     $validate-breakpoints: $validate-breakpoints and $criteria-keys == $other-keys;
     @if not $validate-breakpoints {
       @error "#{$criteria-name}'s keys doesn't same #{$other-name}'s keys";
@@ -88,6 +90,7 @@ $CACHED-SCREEN-DISTANCES:   $screen-distances   !default;
 @function validate-breakpoints() {
   $validate-breakpoints: true;
 
+  // Check Cache
   @if not ($CACHED-BREAKPOINTS  == $breakpoints  and $CACHED-BREAKPOINTS-HEIGHT == $breakpoints-height and
            $CACHED-SCREEN-SIZES == $screen-sizes and $CACHED-SCREEN-DISTANCES   == $screen-distances) {
     $break-keys: map($breakpoints $breakpoints-height $screen-sizes $screen-distances,
@@ -97,10 +100,12 @@ $CACHED-SCREEN-DISTANCES:   $screen-distances   !default;
     $screen-sizes-keys:       nth($break-keys, 3);
     $screen-distances-keys:   nth($break-keys, 4);
 
+    // Check Validate
     $others-name: "$breakpoints-height"    "$screen-sizes"    "$screen-distances";
     $others-keys: $breakpoints-height-keys $screen-sizes-keys $screen-distances-keys;
     $validate-breakpoints: check-breakpoints("$breakpoints", $others-name, $breakpoints-keys, $others-keys);
 
+    // Cache Update
     $CACHED-BREAKPOINTS:        $breakpoints        !global;
     $CACHED-BREAKPOINTS-HEIGHT: $breakpoints-height !global;
     $CACHED-SCREEN-SIZES:       $screen-sizes       !global;
