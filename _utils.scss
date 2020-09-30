@@ -9,6 +9,7 @@
   $iter-num: 0;
   $range-list: ();
 
+  // Get Length
   @if is-num($values) {
     $iter-num: $values;
   }
@@ -16,6 +17,7 @@
     $iter-num: length($values);
   }
 
+  // Append of count
   @for $i from 1 through $iter-num {
     $range-list: append($range-list, $i);
   }
@@ -42,6 +44,7 @@
   $newList: ();
   @each $value in $list {
     @if is-list($value) {
+      // One Depth Flatten
       @each $deepV in $value {
         $newList: append($newList, $deepV);
       }
@@ -139,11 +142,13 @@
     $keys: ();
     $values: ();
 
+    // Each Sets
     @each $key, $val in $value {
       $keys: append($keys, $key);
       $values: append($values, $val);
     }
 
+    // Types of list
     @if $keep == 'keys' {
       @return $keys;
     } @else if $keep == 'values' {
@@ -178,6 +183,7 @@
     @return $a < $b;
   }
 
+  // If string
   $order: "0" "1" "2" "3" "4" "5" "6" "7" "8" "9"
           "a" "b" "c" "d" "e" "f" "g" "h" "i" "j"
           "k" "l" "m" "n" "o" "p" "q" "r" "s" "t"
@@ -190,6 +196,7 @@
     $char-a: str-slice($a, $i, $i);
     $char-b: str-slice($b, $i, $i);
 
+    // Check
     @if $char-a and $char-b and index($order, $char-a) != index($order, $char-b) {
       @return index($order, $char-a) < index($order, $char-b);
     }
@@ -298,6 +305,7 @@
 @function do($value, $functions...) {
   $result: $value;
   $functions: flatten($functions...);
+  // Call each functions
   @each $function in $functions {
     $result: call($function, $result);
   }
@@ -307,6 +315,7 @@
 @function do-list($value, $functions...) {
   $result: $value;
   $functions: flatten($functions...);
+  // Call each functions with full args
   @each $function in $functions {
     $result: call($function, $result...);
   }
@@ -341,6 +350,17 @@
   }
 }
 
+// -- Calcable -----------------------------------------------------------------
+@function is-calcable($size) {
+  // Pass Value
+  // - String
+  //   font-size: 16px !important
+  //   text-indent: 5em hanging each-line
+  // - Num
+  // - Percent
+  @return (is-len($size) and not is-pct($size));
+}
+
 // -- Size ---------------------------------------------------------------------
 @function limit-size($size, $min-size, $max-size) {
   @if not is-null($min-size) {
@@ -359,7 +379,7 @@
 
   $new-sizes: ();
   @each $size in $sizes {
-    $new-size: if(is-len($size), limit-size($size, $min-size, $max-size), $size);
+    $new-size: if(is-calcable($size), limit-size($size, $min-size, $max-size), $size);
     $new-sizes: append($new-sizes, $new-size);
   }
   @return $new-sizes;
@@ -367,7 +387,7 @@
 
 @function replace-size($sizes, $index, $subtitute-size) {
   $size: nth($sizes, $index);
-  @return if(is-len($size) or is-calc($size),
+  @return if(is-calcable($size) or is-calc($size),
              replace-nth($sizes, $index, $subtitute-size), $sizes);
 }
 
@@ -375,7 +395,7 @@
   $sizes: zip($sizesA, $sizesB);
 
   @each $sizeA, $sizeB in $sizes {
-    @if is-num($sizeA, false) and is-num($sizeB, false) {
+    @if is-calcable($sizeA) and is-calcable($sizeB) {
       @return $sizeA <= $sizeB;
     }
   }

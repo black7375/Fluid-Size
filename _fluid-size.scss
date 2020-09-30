@@ -49,7 +49,7 @@ $FIRST-BREAK: 0px     !default;
 
 @function calc-angle($size, $options) {
   // String, Color value passing(Ex. !important, black, white, #111111 ...ETC)
-  @if not is-len($size) {
+  @if not is-calcable($size) {
     @return $size;
   }
 
