@@ -350,6 +350,17 @@
   }
 }
 
+// -- Calcable -----------------------------------------------------------------
+@function is-calcable($size) {
+  // Pass Value
+  // - String
+  //   font-size: 16px !important
+  //   text-indent: 5em hanging each-line
+  // - Num
+  // - Percent
+  @return (is-len($size) and not is-pct($size));
+}
+
 // -- Size ---------------------------------------------------------------------
 @function limit-size($size, $min-size, $max-size) {
   @if not is-null($min-size) {
@@ -368,7 +379,7 @@
 
   $new-sizes: ();
   @each $size in $sizes {
-    $new-size: if(is-len($size), limit-size($size, $min-size, $max-size), $size);
+    $new-size: if(is-calcable($size), limit-size($size, $min-size, $max-size), $size);
     $new-sizes: append($new-sizes, $new-size);
   }
   @return $new-sizes;
@@ -376,7 +387,7 @@
 
 @function replace-size($sizes, $index, $subtitute-size) {
   $size: nth($sizes, $index);
-  @return if(is-len($size) or is-calc($size),
+  @return if(is-calcable($size) or is-calc($size),
              replace-nth($sizes, $index, $subtitute-size), $sizes);
 }
 
@@ -384,7 +395,7 @@
   $sizes: zip($sizesA, $sizesB);
 
   @each $sizeA, $sizeB in $sizes {
-    @if is-num($sizeA, false) and is-num($sizeB, false) {
+    @if is-calcable($sizeA) and is-calcable($sizeB) {
       @return $sizeA <= $sizeB;
     }
   }
