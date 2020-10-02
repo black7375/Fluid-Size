@@ -55,6 +55,7 @@ npm install
 The following documents may be helpful:
 - [README](https://github.com/black7375/Fluid-Size/blob/master/README.md)
 - [Wiki:API](https://github.com/black7375/fluid-size/wiki/API)
+- [Wiki:Comparison](https://github.com/black7375/Fluid-Size/wiki/Comparison)
 - [Wiki:The theory of font size and readability](https://github.com/black7375/Fluid-Size/wiki/The-theory-of-font-size-and-readability)
 
 
