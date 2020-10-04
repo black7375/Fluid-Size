@@ -85,8 +85,8 @@ $unit-types: map-keys(n-units(0)) !default;
 
 @function get-option-value($scoped, $name) {
   @return if(map-has-key($scoped, $name),
-  map-get($scoped, $name),
-  map-get(unit-global-options(), $name));
+             map-get($scoped, $name),
+             map-get(unit-global-options(), $name));
 }
 
 // -- Interface --
