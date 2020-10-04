@@ -83,6 +83,12 @@ $unit-types: map-keys(n-units(0)) !default;
   @return $result;
 }
 
+@function get-option-value($scoped, $name) {
+  @return if(map-has-key($scoped, $name),
+  map-get($scoped, $name),
+  map-get(unit-global-options(), $name));
+}
+
 // -- Interface --
 @function get-option($options: (), $name: all) {
   $scoped: scoped-convert($options);
@@ -96,13 +102,12 @@ $unit-types: map-keys(n-units(0)) !default;
 
     @if is-list($name) {
       @each $option in $name {
-        $value:  map-get($scoped, $option);
-        $result: append($result, if(is-null($value), map-get(global-options(), $option), $value));
+        $value:  get-option-value($scoped, $option);
+        $result: append($result, $value);
       }
     }
     @else {
-      $value:  map-get($scoped, $name);
-      $result: if(is-null($value), map-get(global-options(), $name), $value);
+      $result: get-option-value($scoped, $name);
     }
   }
   @return $result;
