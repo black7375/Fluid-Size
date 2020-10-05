@@ -58,6 +58,7 @@ tag {
 **Example**
 
 You can use the regular CSS as it is.
+There are no restrictions. [Ver 1.5.0 will patch for `%`, `num`]
 ```scss
 // Only Single Value
 body {
@@ -69,7 +70,7 @@ body {
 body {
   @include font-size(16px !important);         // with Uncountable Value
   @include text-indent(5em hanging each-line); // with Multiple Uncountable Values
-  @include margin(-3px 1em auto);              // with Mixed Value
+  @include margin(-3px 1% 0 auto);             // with Mixed Value
 }
 ```
 
