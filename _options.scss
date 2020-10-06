@@ -55,10 +55,12 @@ $unit-types: map-keys(n-units(0)) !default;
 
 // == Get ======================================================================
 @function scoped-convert($scoped-options) {
+  // Option Empty
   @if length($scoped-options) == 0 {
     @return ();
   }
 
+  // Replace key to Global Name
   $result: ();
   @each $key, $value in $scoped-options {
     $global-key: map-get($fluid-options-map, $key);
@@ -81,6 +83,12 @@ $unit-types: map-keys(n-units(0)) !default;
   @return $result;
 }
 
+@function get-option-value($scoped, $name) {
+  @return if(map-has-key($scoped, $name),
+             map-get($scoped, $name),
+             map-get(global-options(), $name));
+}
+
 // -- Interface --
 @function get-option($options: (), $name: all) {
   $scoped: scoped-convert($options);
@@ -94,13 +102,12 @@ $unit-types: map-keys(n-units(0)) !default;
 
     @if is-list($name) {
       @each $option in $name {
-        $value:  map-get($scoped, $option);
-        $result: append($result, if(is-null($value), map-get(global-options(), $option), $value));
+        $value:  get-option-value($scoped, $option);
+        $result: append($result, $value);
       }
     }
     @else {
-      $value:  map-get($scoped, $name);
-      $result: if(is-null($value), map-get(global-options(), $name), $value);
+      $result: get-option-value($scoped, $name);
     }
   }
   @return $result;
@@ -129,7 +136,8 @@ $CACHED-FLUID-TYPES:    fluid-types()      !default;
   $validate-keys:    false;
   $validate-types:   true;
 
-  // Check api name
+  // - Check api name -
+  // Mapping check
   $global-options:       global-options();
   $mapping-names: map-values($fluid-options-map);
   @if not ($CACHED-GLOBAL-OPTIONS == $global-options and
@@ -141,6 +149,7 @@ $CACHED-FLUID-TYPES:    fluid-types()      !default;
     $CACHED-FLUID-OPTIONS:  $fluid-options-map !global;
   }
 
+  // Exist key check
   $options-keys: map-keys($options);
   @if not contain($CACHED-OPTIONS-KEYS, $options-keys) {
     $validate-keys: check-option("$fluid-options-map key", "$options", "key",
@@ -149,7 +158,7 @@ $CACHED-FLUID-TYPES:    fluid-types()      !default;
     $CACHED-OPTIONS-KEYS: map-merge($CACHED-OPTIONS-KEYS, ($options-keys: true)) !global;
   }
 
-  // Check each type
+  // - Check each type -
   $all-options: get-option($options);
   $all-options-keys: map-keys($all-options);
 
@@ -158,10 +167,13 @@ $CACHED-FLUID-TYPES:    fluid-types()      !default;
     @each $all-options-key in $all-options-keys {
       $fluid-type:   map-get($fluid-types, $all-options-key);
       $option-value: map-get($all-options, $all-options-key);
+
+      // Case min or max
       @if contain('min' 'max', $all-options-key) {
         $option-value: if(is-null($option-value), $option-value, get-unit($option-value));
       }
 
+      // Case not contain in types
       @if not contain($fluid-type, $option-value) {
         @error "$options's value #{$option-value} doesn't exist at fluid-types";
         $validate-types: false;
