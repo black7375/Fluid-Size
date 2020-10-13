@@ -131,8 +131,8 @@ body {                       // Default
 
 Options consist of global and scoped options.
 
-- Global Option: Setting it as a `variable` changes the default value of the whole.
-- Scoped Option: It is provided as an argument(`map` type) to the function, and when used, applies only to the current value.
+- **Global Option:** Setting it as a `variable` changes the default value of the whole.
+- **Scoped Option:** It is provided as an argument(`map` type) to the function, and when used, applies only to the current value.
 
 ```scss
 // Global Option
