@@ -1,57 +1,77 @@
 // @import 'utils';
 
 // ** Break Points *************************************************************
-$phone-width:  480px !default;
-$phone-height: 854px !default;
+$phone-width:  360px !default;
+$phone-height: 640px !default;
+$high-phone-width:  414px !default;
+$high-phone-height: 896px !default;
 
 $tablet-width:   768px !default;
 $tablet-height: 1024px !default;
+$high-tablet-width:  1024px !default;
+$high-tablet-height: 1366px !default;
 
 $laptop-width:  1280px !default;
 $laptop-height:  720px !default;
+$high-laptop-width: 1600px !default;
+$high-laptop-height: 900px !default;
 
 $desktop-width:  1920px !default;
 $desktop-height: 1080px !default;
-
-$high-desktop-width:  2560px !default;
-$high-desktop-height: 1440px !default;
+$high-desktop-width:  3840px !default;
+$high-desktop-height: 2160px !default;
 
 $breakpoints: (        // px
   phone:        $phone-width,
+  high-phone:   $high-phone-width,
   tablet:       $tablet-width,
+  high-tablet:  $high-tablet-width,
   laptop:       $laptop-width,
+  high-laptop:  $high-laptop-width,
   desktop:      $desktop-width,
   high-desktop: $high-desktop-width
 ) !default;
 
 $breakpoints-height: ( // px
   phone:        $phone-height,
+  high-phone:   $high-phone-height,
   tablet:       $tablet-height,
+  high-tablet:  $high-tablet-height,
   laptop:       $laptop-height,
+  high-laptop:  $high-laptop-height,
   desktop:      $desktop-height,
   high-desktop: $high-desktop-height
 ) !default;
 
 $screen-sizes: (       // inch
-  phone:        5,
-  tablet:       10.2,
-  laptop:       14,
+  phone:        4.7,
+  high-phone:   5.8,
+  tablet:       9.7,
+  high-tablet:  12.9,
+  laptop:       13,
+  high-laptop:  14,
   desktop:      24,
-  high-desktop: 27
+  high-desktop: 32
 ) !default;
 
 $screen-distances: (   // 10cm
   phone:        3,
+  high-phone:   3,
   tablet:       4,
+  high-tablet:  4,
   laptop:       5,
+  high-laptop:  5,
   desktop:      6,
   high-desktop: 6
 ) !default;
 
 // Alias
 $phone:        $phone-width        !default;
+$high-phone:   $high-phone-width   !default;
 $tablet:       $tablet-width       !default;
+$high-tablet:  $high-tablet-width  !default;
 $laptop:       $laptop-width       !default;
+$high-laptop:  $high-laptop-width  !default;
 $desktop:      $desktop-width      !default;
 $high-desktop: $high-desktop-width !default;
 
