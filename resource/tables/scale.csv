@@ -1,0 +1,11 @@
+Scale,number of different pitch classes
+monotonic,1
+ditonic,2
+tritonic,3
+tetratonic,4
+pentatonic,5
+hexatonic,6
+heptatonic,7
+octatonic,8
+decatonic,10
+chromatic,12

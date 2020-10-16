@@ -1,0 +1,14 @@
+Number of semitones,"Intervals(Minor, Major, Perfect)",Short,Interval(Augmented or Diminished),Short,Alias,Short,Pitch Ratio(5-limit tuning),Decimal,Multiplier,Frequency(Hz)
+0,Perfect unison,P1,Diminished second,d2,,,1:01,1,![2^{0 \over 12}](https://render.githubusercontent.com/render/math?math=\large%202^{0%20\over%2012}),440
+1,Minor second,m2,Augmented unison,A1,Semitone,S,16:15,1.067,![2^{1 \over 12}](https://render.githubusercontent.com/render/math?math=\large%202^{1%20\over%2012}),466.16
+2,Major second,M2,Diminished third,d3,Tone,T,9:08,1.125,![2^{2 \over 12}](https://render.githubusercontent.com/render/math?math=\large%202^{2%20\over%2012}),493.88
+3,Minor third,m3,Augmented second,A2,,,6:05,1.2,![2^{3 \over 12}](https://render.githubusercontent.com/render/math?math=\large%202^{3%20\over%2012}),523.25
+4,Major third,M3,Diminished fourth,d4,,,5:04,1.25,![2^{4 \over 12}](https://render.githubusercontent.com/render/math?math=\large%202^{4%20\over%2012}),554.37
+5,Perfect fourth,P4,Augmented third,A3,,,4:03,1.333,![2^{5 \over 12}](https://render.githubusercontent.com/render/math?math=\large%202^{5%20\over%2012}),587.33
+6,,,Diminished fifth / Augmented fourth,d5 / A4,Tritone,TT,45:32:00,1.414,![2^{6 \over 12}](https://render.githubusercontent.com/render/math?math=\large%202^{6%20\over%2012}),622.25
+7,Perfect fifth,P5,Diminished sixth,d6,,,3:02,1.5,![2^{7 \over 12}](https://render.githubusercontent.com/render/math?math=\large%202^{7%20\over%2012}),659.26
+8,Minor sixth,m6,Augmented fifth,A5,,,8:05,1.6,![2^{8 \over 12}](https://render.githubusercontent.com/render/math?math=\large%202^{8%20\over%2012}),698.46
+9,Major sixth,M6,Diminished seventh,d7,,,5:03,1.667,![2^{9 \over 12}](https://render.githubusercontent.com/render/math?math=\large%202^{9%20\over%2012}),739.99
+10,Minor seventh,m7,Augmented sixth,A6,,,16:09,1.778,![2^{10 \over 12}](https://render.githubusercontent.com/render/math?math=\large%202^{10%20\over%2012}),783.99
+11,Major seventh,M7,Diminished octave,d8,,,15:08,1.875,![2^{11 \over 12}](https://render.githubusercontent.com/render/math?math=\large%202^{11%20\over%2012}),830.61
+12,Perfect Octave,P8,Augmented seventh,A7,,,2:01,2,![2^{12 \over 12}](https://render.githubusercontent.com/render/math?math=\large%202^{12%20\over%2012}),880
