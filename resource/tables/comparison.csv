@@ -1,0 +1,20 @@
+**Feature Group**,**Features**,**[Fluid Size](https://github.com/black7375/Fluid-Size)**,**[RFS](https://github.com/twbs/rfs)**,**[Fluid font-size](https://github.com/philippkuehn/fluid-font-size)**,**[Fluid Typography](https://github.com/jdillick/fluid-typography)**,**[FluidMS](https://github.com/csshugs/FluidMS)**
+**Main(3)**,**Fluid**,:heavy_check_mark:,:heavy_check_mark:,:heavy_check_mark:,:heavy_check_mark:,:heavy_check_mark:
+,**Visual Angle**,:heavy_check_mark:,:heavy_multiplication_x:,:heavy_multiplication_x:,:heavy_multiplication_x:,:heavy_multiplication_x:
+,**Modular Scale**,:heavy_multiplication_x:,:heavy_multiplication_x:,:heavy_multiplication_x:,:heavy_multiplication_x:,:heavy_check_mark:
+**Option(16)**,**List Input**,:heavy_check_mark:,:warning: (Only `important`),:heavy_multiplication_x:,:heavy_multiplication_x:,:heavy_multiplication_x:
+,**Global Options**,:heavy_check_mark:,:heavy_check_mark:,:warning: (Only `size ratio`),:heavy_check_mark:,:heavy_check_mark:
+,**Scoped Options**,:heavy_check_mark:,:heavy_multiplication_x:,:heavy_check_mark:,:warning: (Only `max` size),":warning: (Only `line-height`, 'important')"
+,**Device**,:heavy_check_mark:,":warning: (Use `size factor`, `max` width)",:warning: (Use `size ratio`),:heavy_check_mark:,":warning: (Only `min`, `max` width)"
+,**Min Size**,:heavy_check_mark:,:heavy_check_mark:,:heavy_check_mark:,:heavy_multiplication_x:,:heavy_check_mark:
+,**Max Size**,:heavy_check_mark:,:heavy_multiplication_x:,:heavy_check_mark:,:heavy_multiplication_x:,:heavy_check_mark:
+,**Result Unit**,:heavy_check_mark:,:heavy_check_mark:,:heavy_multiplication_x:,:heavy_multiplication_x:,:heavy_multiplication_x:
+,**Break Unit**,:heavy_multiplication_x:,:heavy_check_mark:,:heavy_multiplication_x:,:heavy_multiplication_x:,:heavy_multiplication_x:
+,**Base Size**(`rem`),:warning: (Only global option),:heavy_check_mark:,:heavy_multiplication_x:,:heavy_check_mark:,:heavy_multiplication_x:
+,**VW-Only**,:heavy_check_mark:,:heavy_multiplication_x:,:heavy_check_mark:,:heavy_multiplication_x:,:heavy_multiplication_x:
+,**Size Limit**,:heavy_check_mark:,:warning: (Only `min` size),:heavy_multiplication_x:,:heavy_multiplication_x:,:heavy_multiplication_x:
+,**Break Limit**,:heavy_check_mark:,:warning: (Only `max` width),:warning: (Only `max` width),:heavy_multiplication_x:,:warning: (Only `max` width)
+,**Fallback**,:heavy_multiplication_x:,:heavy_multiplication_x:,:heavy_check_mark:,:warning: (Not static size),:heavy_multiplication_x:
+,**Class**,:heavy_multiplication_x:,:heavy_check_mark:,:heavy_multiplication_x:,:heavy_multiplication_x:,:heavy_multiplication_x:
+,**Multi Platform**,:heavy_multiplication_x:,":heavy_check_mark:(`sass`, `post css`, `less`, `stylus`)",:heavy_multiplication_x:,:heavy_multiplication_x:,:heavy_multiplication_x:
+,**Miscellaneous**,**Count:** 1<br>- Fit Size Mode,"**Count:** 2<br>- Dimensional(`vw`, `vmin`)<br>- Safari Iframe Resize Fix",**Count:** 1<br>- [Polyfill](https://github.com/rodneyrehm/viewport-units-buggyfill) Fallback,**Count:** 3<br>- Body Width Fix<br>- Break Point To JSON<br>- Debug Layout,**Count:** 0
