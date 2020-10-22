@@ -4,6 +4,7 @@
 [![GitHub Workflow Publishing Status](https://img.shields.io/github/workflow/status/black7375/Fluid-Size/Publishing?label=Publishing)](https://github.com/black7375/Fluid-Size/actions?query=workflow%3APublishing)
 [![npm](https://img.shields.io/npm/v/fluid-size?color=%23CC3534&logo=npm)](https://www.npmjs.com/package/fluid-size) 
 [![gpr](https://img.shields.io/github/v/release/black7375/Fluid-Size?color=%23117FFF&label=GPR&logo=github)](https://github.com/black7375/Fluid-Size/packages/336258)
+[![jsDelivr_Hits](https://img.shields.io/jsdelivr/npm/hm/fluid-size?color=FF5627&label=jsDelivr&logo=jsDelivr&logoColor=FF5627)](https://www.jsdelivr.com/package/npm/fluid-size)
 
 ![Fluid-Size](https://raw.githubusercontent.com/black7375/Fluid-Size/resource/resource/Fluid-Size.png)
 
