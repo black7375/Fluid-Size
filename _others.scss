@@ -1,0 +1,10 @@
+// ** Others *******************************************************************
+
+// Account for difference between 100vw and 100% when scroll bars are included on page.
+@mixin body-width-fix() {
+  @media screen {
+    width: 100vw;
+    margin-left: calc((100% - 100vw) / 2);
+    overflow-x: hidden;
+  }
+}
