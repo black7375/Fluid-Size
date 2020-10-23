@@ -8,3 +8,8 @@
     overflow-x: hidden;
   }
 }
+
+// Safari doesn't resize its values in an iframe if the iframe is resized.
+@mixin safari-iframe-resize-fix() {
+  min-width: 0vw;
+}
