@@ -4,6 +4,7 @@
 [![GitHub Workflow Publishing Status](https://img.shields.io/github/workflow/status/black7375/Fluid-Size/Publishing?label=Publishing)](https://github.com/black7375/Fluid-Size/actions?query=workflow%3APublishing)
 [![npm](https://img.shields.io/npm/v/fluid-size?color=%23CC3534&logo=npm)](https://www.npmjs.com/package/fluid-size) 
 [![gpr](https://img.shields.io/github/v/release/black7375/Fluid-Size?color=%23117FFF&label=GPR&logo=github)](https://github.com/black7375/Fluid-Size/packages/336258)
+[![jsDelivr_Hits](https://img.shields.io/jsdelivr/npm/hm/fluid-size?color=FF5627&label=jsDelivr&logo=jsDelivr&logoColor=FF5627)](https://www.jsdelivr.com/package/npm/fluid-size)
 
 ![Fluid-Size](https://raw.githubusercontent.com/black7375/Fluid-Size/resource/resource/Fluid-Size.png)
 
@@ -58,6 +59,7 @@ tag {
 **Example**
 
 You can use the regular CSS as it is.
+There are no restrictions. [Ver 1.5.0 will patch for `%`, `num`]
 ```scss
 // Only Single Value
 body {
@@ -69,7 +71,7 @@ body {
 body {
   @include font-size(16px !important);         // with Uncountable Value
   @include text-indent(5em hanging each-line); // with Multiple Uncountable Values
-  @include margin(-3px 1em auto);              // with Mixed Value
+  @include margin(-3px 1% 0 auto);             // with Mixed Value
 }
 ```
 
@@ -130,8 +132,8 @@ body {                       // Default
 
 Options consist of global and scoped options.
 
-- Global Option: Setting it as a `variable` changes the default value of the whole.
-- Scoped Option: It is provided as an argument(`map` type) to the function, and when used, applies only to the current value.
+- **Global Option:** Setting it as a `variable` changes the default value of the whole.
+- **Scoped Option:** It is provided as an argument(`map` type) to the function, and when used, applies only to the current value.
 
 ```scss
 // Global Option

@@ -1,7 +1,7 @@
 {
   "name": "@black7375/fluid-size",
   "description": "A method of fluidly resizing in response to various devices. (with SASS)",
-  "version": "1.4.1",
+  "version": "1.5.0",
   "author": "black7375",
   "license": "MIT",
   "keywords": [
@@ -14,6 +14,7 @@
     "media-queries"
   ],
   "main": "./_fluid-size.scss",
+  "sass": "./_fluid-size.scss",
   "repository": {
     "type": "git",
     "url": "git+https://github.com/black7375/fluid-size.git"
@@ -28,7 +29,7 @@
   "dependencies": {
     "include-media": "^1.4.9",
     "mathsass": "^0.11.0",
-    "sass-unitconverter": "^2.4.2"
+    "sass-unitconverter": "^2.5.2"
   },
   "devDependencies": {
     "scss-bundle": "^3.1.2"

@@ -15,6 +15,7 @@
 @import '~mathsass/dist/math';
 @import '~sass-unitconverter/unitconverter';
 @import 'utils';
+@import 'others';
 @import 'options';
 
 // ** Fluid Size ***************************************************************
@@ -50,7 +51,7 @@ $FIRST-BREAK: 0px     !default;
 @function calc-angle($size, $options) {
   // String, Color value passing(Ex. !important, black, white, #111111 ...ETC)
   @if not is-calcable($size) {
-    @return $size;
+    @return if(is-num($size), #{$size}num, $size);
   }
 
   $size:   num(px($size));
@@ -93,6 +94,21 @@ $FIRST-BREAK: 0px     !default;
 }
 
 // -- Generate Fit Size --------------------------------------------------------
+@function convert-visual($visual-angle) {
+  // if origin $size type is num
+  // => ${$size}num
+  // Return it to its original type.
+  @if is-str($visual-angle) {
+    $str-start: str-length($visual-angle) - 2;
+    $is-number: str-slice($visual-angle, $str-start) == "num";
+    @return if($is-number, num($visual-angle), $visual-angle);
+  }
+  @else {
+    @return $visual-angle;
+  }
+}
+
+// Calc Fit Size
 @function calc-size($visual-angle) {
   $check:       is-num($visual-angle);
   $values:      zip-responsive();
@@ -109,9 +125,11 @@ $FIRST-BREAK: 0px     !default;
       $angle: tan($PI * $visual-angle / 10800);
       $size: $screen-distance * $angle * $ppi / 54;
 
+      $size: px($size, (callback: null));
       $break-sizes: append($break-sizes, ($size));
     }
     @else { // Can't Calc: passed
+      $visual-angle: convert-visual($visual-angle);
       $break-sizes: append($break-sizes, ($visual-angle));
     }
   }
@@ -123,7 +141,6 @@ $FIRST-BREAK: 0px     !default;
   // Each Fit Size
   $visual-angle: calc-angles($sizes, $options);
   $scaled-sizes: map($visual-angle, calc-size, $separator: comma);
-  $scaled-sizes: to-unit-data($scaled-sizes, px);
 
   @return if(is-list($sizes), call(zip, $scaled-sizes...), $scaled-sizes);
 }
@@ -199,7 +216,7 @@ $FIRST-BREAK: 0px     !default;
 
 // -- Mode: VW-Only --
 @function vw-sizes($now-sizes, $now-break) {
-  @return to-unit-data($now-sizes, vw, $now-break);
+  @return to-unit-data($now-sizes, vw, (width: $now-break));
 }
 
 // -- Option::Limit ------------------------------------------------------------

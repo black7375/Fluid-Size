@@ -361,6 +361,12 @@
   @return (is-len($size) and not is-pct($size));
 }
 
+@function calcable-callback($input, $unit, $options) {
+  @return is-calcable($input);
+}
+
+$check-callback: calcable-callback;
+
 // -- Size ---------------------------------------------------------------------
 @function limit-size($size, $min-size, $max-size) {
   @if not is-null($min-size) {
