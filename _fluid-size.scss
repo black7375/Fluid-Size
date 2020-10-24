@@ -410,8 +410,8 @@ $FIRST-BREAK: 0px     !default;
   $now-key:  map-nth($fluid-breakpoints, $i);
   $next-key: map-nth($fluid-breakpoints, $i + 1);
 
-  $now-sizes:   map-get($fit-sizes, $now-key );
-  $next-sizes:  map-get($fit-sizes, $next-key);
+  $now-sizes:  map-get($fit-sizes, $now-key );
+  $next-sizes: map-get($fit-sizes, $next-key);
   $now-break:  map-get($fluid-breakpoints, $now-key );
   $next-break: map-get($fluid-breakpoints, $next-key);
 
@@ -522,7 +522,7 @@ $FIRST-BREAK: 0px     !default;
   }
 }
 
-// -- Syntax Sugar --
+// -- Wrapper --
 @mixin fluid($property, $sizes, $options: empty-map(), $type: 'font') {
   // Preprocessing for $options
   @if not is-map($options) {
@@ -539,6 +539,12 @@ $FIRST-BREAK: 0px     !default;
   $validate-breakpoints: validate-breakpoints();
   $validate-options:     validate-options($options);
 
+  // Set Unit Scoped Option
+  $temp-root: $root-font-size;
+  $temp-base: $base-font-size;
+  $root-font-size: get-option($options, root-size) !global;
+  $base-font-size: get-option($options, base-size) !global;
+
   // Single value to List processing
   @if not is-list($sizes) {
     $sizes: ($sizes, );
@@ -550,6 +556,10 @@ $FIRST-BREAK: 0px     !default;
   $devices-sizes: to-map($keys, $values);
 
   @include fluid-media($property, $devices-sizes, $options);
+
+  // Set to Original
+  $root-font-size: $temp-root !global;
+  $base-font-size: $temp-base !global;
 }
 
 // == Interface ================================================================

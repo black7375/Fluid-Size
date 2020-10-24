@@ -21,6 +21,10 @@ $fls-limit:  size !default; // size  or break
     min:         $fls-min,
     max:         $fls-max,
     limit:       $fls-limit,
+
+    // Unit Converter
+    root-size:   $root-font-size,
+    base-size:   $base-font-size,
   );
   @return $global-options;
 }
@@ -36,6 +40,14 @@ $fluid-options-map: (
    max:         max,
    max-size:    max,
    limit:       limit,
+
+   // Unit Converter
+   root:        root-size,
+   root-size:   root-size,
+   size-root:   root-size,
+   base:        base-size,
+   base-size:   base-size,
+   size-base:   base-size,
 );
 
 // -- Mapping with Types --
@@ -49,6 +61,10 @@ $unit-types: map-keys(n-units(0)) !default;
     min:         join(null, $unit-types),
     max:         join(null, $unit-types),
     limit:       size break,
+
+    // Unit Converter
+    root-size:   $unit-types,
+    base-size:   $unit-types,
   );
   @return $fluid-types;
 }
@@ -171,6 +187,11 @@ $CACHED-FLUID-TYPES:    fluid-types()      !default;
       // Case min or max
       @if contain('min' 'max', $all-options-key) {
         $option-value: if(is-null($option-value), $option-value, get-unit($option-value));
+      }
+
+      // Case root-size or base-size
+      @if contain('root-size' 'base-size', $all-options-key) {
+        $option-value: get-unit($option-value);
       }
 
       // Case not contain in types
