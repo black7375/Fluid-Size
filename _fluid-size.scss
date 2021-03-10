@@ -301,8 +301,8 @@ $FIRST-BREAK: 0px     !default;
 }
 
 // -- Limit --
-@mixin fluid-add-break($property, $now-key, $next-sizes, $fluid-sizes, $max-size,
-                       $next-break, $limit-breaks, $limit-types, $sorted-index, $increase) {
+@mixin fluid-add-break($property, $next-sizes, $fluid-sizes, $max-size,
+                       $now-break, $next-break, $limit-breaks, $limit-types, $sorted-index, $increase) {
   $decrease: not $increase;
 
   // now-break: increase => pass, decrease => subtitution
@@ -314,7 +314,7 @@ $FIRST-BREAK: 0px     !default;
       }
     }
   }
-  @include media(">=#{$now-key}") {
+  @include media(">=#{$now-break}") {
     #{$property}: $fluid-sizes;
   }
 
@@ -361,14 +361,14 @@ $FIRST-BREAK: 0px     !default;
   }
 }
 
-@mixin fluid-media-limit($property, $now-key, $now-sizes, $next-sizes, $fluid-sizes, $max-size,
-                         $next-break, $limit-breaks, $limit-types, $is-fluid) {
+@mixin fluid-media-limit($property, $now-sizes, $next-sizes, $fluid-sizes, $max-size,
+                         $now-break, $next-break, $limit-breaks, $limit-types, $is-fluid) {
   $exist-sub: contain($limit-types, 'substitution');
   $exist-add: contain($limit-types, 'add');
   $sorted-index: null;
   @if (not $exist-sub) and (not $exist-add) {
     //all pass
-    @include media(">=#{$now-key}") {
+    @include media(">=#{$now-break}") {
       #{$property}: $fluid-sizes;
     }
   }
@@ -384,7 +384,7 @@ $FIRST-BREAK: 0px     !default;
         $fluid-sizes: replace-size($fluid-sizes, $index, $max-size);
       }
     }
-    @include media(">=#{$now-key}") {
+    @include media(">=#{$now-break}") {
       #{$property}: $fluid-sizes;
     }
   }
@@ -398,14 +398,15 @@ $FIRST-BREAK: 0px     !default;
 
     // increase => now-break(pass),        add-break(subtitution)
     // decrease => now-break(subtitution), add-break(create fluide-size)
-    @include fluid-add-break($property, $now-key, $next-sizes, $fluid-sizes, $max-size,
-                             $next-break, $limit-breaks, $limit-types, $sorted-index, $increase);
+    @include fluid-add-break($property, $next-sizes, $fluid-sizes, $max-size,
+                             $now-break, $next-break, $limit-breaks, $limit-types, $sorted-index, $increase);
   }
 }
 
 // == Medias ===================================================================
 @mixin fluid-media-apply($property, $fit-sizes, $fluid-breakpoints, $i, $last-key,
-                         $fluid-mode, $fluid-unit, $min-size, $max-size, $limit) {
+                         $fluid-mode, $fluid-unit, $min-size, $max-size, $limit,
+                         $breakunit) {
   // Get key and Sizes
   $now-key:  map-nth($fluid-breakpoints, $i);
   $next-key: map-nth($fluid-breakpoints, $i + 1);
@@ -454,6 +455,10 @@ $FIRST-BREAK: 0px     !default;
                      vw-sizes($now-sizes, $now-break));
   }
 
+  // Set Break Units
+  $now-break:  to-unit-data($now-break,  $breakunit);
+  $next-break: to-unit-data($next-break, $breakunit);
+
   // Apply Media
   $not-continuous: $now-sizes != $prev-sizes;
 
@@ -461,8 +466,8 @@ $FIRST-BREAK: 0px     !default;
     #{$property}: $now-sizes;
   }
   @else if not $is-fit and not is-null($max-size) and $not-continuous {
-    @include fluid-media-limit($property, $now-key, $now-sizes, $next-sizes, $fluid-sizes,
-                               $max-size, $next-break, $limit-breaks, $limit-types, $is-fluid);
+    @include fluid-media-limit($property, $now-sizes, $next-sizes, $fluid-sizes,
+                               $max-size, $now-break, $next-break, $limit-breaks, $limit-types, $is-fluid);
 
     @if $is-vw and $is-last and $now-sizes != $next-sizes {
       $limit-breaks: vw-limit-breaks($next-sizes, $max-size, $next-break, $next-break);
@@ -471,20 +476,20 @@ $FIRST-BREAK: 0px     !default;
       $fluid-sizes: vw-sizes($next-sizes, $next-break);
       $last-sizes: null;
 
-      @include fluid-media-limit($property, $next-key, $next-sizes, $last-sizes, $fluid-sizes,
-                                 $max-size, $next-break, $limit-breaks, $limit-types, $is-fluid);
+      @include fluid-media-limit($property, $next-sizes, $last-sizes, $fluid-sizes,
+                                 $max-size, $next-break, $next-break, $limit-breaks, $limit-types, $is-fluid);
     }
   }
   @else if $not-continuous {
     $now-values: if(not $is-fit, $fluid-sizes, $now-sizes);
-    @include media(">=#{$now-key}") {
+    @include media(">=#{$now-break}") {
       #{$property}: $now-values;
     }
 
     // Last at fit, vw-only mode
     $next-values: if($is-fit, $next-sizes, vw-sizes($next-sizes, $next-break));
     @if not $is-fluid and $is-last and $now-sizes != $next-sizes {
-      @include media(">=#{$next-key}") {
+      @include media(">=#{$next-break}") {
         #{$property}: $next-values;
       }
     }
@@ -508,7 +513,8 @@ $FIRST-BREAK: 0px     !default;
   $min-size:   get-option($options,   min);
   $max-size:   get-option($options,   max);
   $limit:      get-option($options, limit);
-  $fluid-options: ($fluid-mode, $fluid-unit, $min-size, $max-size, $limit);
+  $breakunit:  get-option($options, breakunit);
+  $fluid-options: ($fluid-mode, $fluid-unit, $min-size, $max-size, $limit, $breakunit);
 
   // Apply media
   $last-size: length($fluid-breakpoints) - 1;
