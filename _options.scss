@@ -4,14 +4,14 @@
 
 // ** Options ******************************************************************
 // == Global Options ===========================================================
-$fls-mode:  fluid !default; // fluid or fit, vw-only
-$fls-device:  min !default; // min   or max, devices's key(Ex. phone, tablet, ...)
-$fls-unit:   each !default; // each  or units(Ex. px, em, rem, ...)
-$fls-min:    null !default; // null  or length(Ex. 20px, 20pt, ...)
-$fls-max:    null !default; // null  or length(Ex. 20px, 20pt, ...)
-$fls-limit:  size !default; // size  or break
+$fls-mode:   fluid !default; // fluid or fit, vw-only
+$fls-device:   min !default; // min   or max, devices's key(Ex. phone, tablet, ...)
+$fls-unit:    each !default; // each  or units(Ex. px, em, rem, ...)
 $fls-breakunit: px !default; // units(Ex. px, em, rem, ...)
-$fls-class: false !default; // false or true
+$fls-min:     null !default; // null  or length(Ex. 20px, 20pt, ...)
+$fls-max:     null !default; // null  or length(Ex. 20px, 20pt, ...)
+$fls-limit:   size !default; // size  or break
+$fls-class:  false !default; // false or true
 
 // == Mapping ==================================================================
 // -- Mapping with API Name --
@@ -21,10 +21,10 @@ $fls-class: false !default; // false or true
     mode:        $fls-mode,
     device:      $fls-device,
     unit:        $fls-unit,
+    breakunit:   $fls-breakunit,
     min:         $fls-min,
     max:         $fls-max,
     limit:       $fls-limit,
-    breakunit:   $fls-breakunit,
     class:       $fls-class,
 
     // Unit Converter
@@ -40,12 +40,12 @@ $fluid-options-map: (
    mode:        mode,
    device:      device,
    unit:        unit,
+   breakunit:   breakunit,
    min:         min,
    min-size:    min,
    max:         max,
    max-size:    max,
    limit:       limit,
-   breakunit:   breakunit,
    class:       class,
 
    // Unit Converter
@@ -66,10 +66,10 @@ $bool-types: true false;
     mode:        fluid fit vw-only,
     device:      join(min max, map-keys($breakpoints)),
     unit:        join(each, $unit-types),
+    breakunit:   $unit-types,
     min:         join(null, $unit-types),
     max:         join(null, $unit-types),
     limit:       size break,
-    breakunit:   $unit-types,
     class:       $bool-types,
 
     // Unit Converter

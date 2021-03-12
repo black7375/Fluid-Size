@@ -301,7 +301,7 @@ $FIRST-BREAK: 0px     !default;
 }
 
 // -- Limit --
-@mixin fluid-add-break($property, $next-sizes, $fluid-sizes, $max-size,
+@mixin fluid-add-break($property,  $next-sizes, $fluid-sizes,  $max-size,
                        $now-break, $next-break, $limit-breaks, $limit-types,
                        $sorted-index, $increase, $class) {
   $decrease: not $increase;
@@ -410,7 +410,7 @@ $FIRST-BREAK: 0px     !default;
 
     // increase => now-break(pass),        add-break(subtitution)
     // decrease => now-break(subtitution), add-break(create fluide-size)
-    @include fluid-add-break($property, $next-sizes, $fluid-sizes, $max-size,
+    @include fluid-add-break($property,  $next-sizes, $fluid-sizes,  $max-size,
                              $now-break, $next-break, $limit-breaks, $limit-types,
                              $sorted-index, $increase, $class);
   }
@@ -425,14 +425,14 @@ $FIRST-BREAK: 0px     !default;
     }
   }
   @else {
-      @content;
+    @content;
   }
 }
 
 // == Medias ===================================================================
 @mixin fluid-media-apply($property, $fit-sizes, $fluid-breakpoints, $i, $last-key,
-                         $fluid-mode, $fluid-unit, $min-size, $max-size, $limit,
-                         $breakunit, $class) {
+                         $fluid-mode, $fluid-unit, $breakunit,
+                         $min-size, $max-size, $limit, $class) {
   // Get key and Sizes
   $now-key:  map-nth($fluid-breakpoints, $i);
   $next-key: map-nth($fluid-breakpoints, $i + 1);
@@ -443,7 +443,7 @@ $FIRST-BREAK: 0px     !default;
   $next-break: map-get($fluid-breakpoints, $next-key);
 
   $first: $now-key == $FIRST-KEY;
-  $prev-key:  if($first, null, map-nth($fluid-breakpoints, $i - 1));
+  $prev-key:   if($first, null, map-nth($fluid-breakpoints, $i - 1));
   $prev-sizes: if(is-null($prev-key), null, map-get($fit-sizes, $prev-key));
 
   // Apply Options
@@ -542,13 +542,13 @@ $FIRST-BREAK: 0px     !default;
   // Get Options
   $fluid-mode: get-option($options,  mode);
   $fluid-unit: get-option($options,  unit);
+  $breakunit:  get-option($options, breakunit);
   $min-size:   get-option($options,   min);
   $max-size:   get-option($options,   max);
   $limit:      get-option($options, limit);
-  $breakunit:  get-option($options, breakunit);
   $class:      get-option($options, class);
-  $fluid-options: ($fluid-mode, $fluid-unit, $min-size, $max-size, $limit,
-                   $breakunit, $class);
+  $fluid-options: ($fluid-mode, $fluid-unit, $breakunit,
+                   $min-size, $max-size, $limit, $class);
 
   // Apply media
   $last-size: length($fluid-breakpoints) - 1;
