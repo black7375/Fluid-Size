@@ -11,6 +11,7 @@ $fls-min:    null !default; // null  or length(Ex. 20px, 20pt, ...)
 $fls-max:    null !default; // null  or length(Ex. 20px, 20pt, ...)
 $fls-limit:  size !default; // size  or break
 $fls-breakunit: px !default; // units(Ex. px, em, rem, ...)
+$fls-class: false !default; // false or true
 
 // == Mapping ==================================================================
 // -- Mapping with API Name --
@@ -24,6 +25,7 @@ $fls-breakunit: px !default; // units(Ex. px, em, rem, ...)
     max:         $fls-max,
     limit:       $fls-limit,
     breakunit:   $fls-breakunit,
+    class:       $fls-class,
 
     // Unit Converter
     root-size:   $root-font-size,
@@ -44,6 +46,7 @@ $fluid-options-map: (
    max-size:    max,
    limit:       limit,
    breakunit:   breakunit,
+   class:       class,
 
    // Unit Converter
    root:        root-size,
@@ -56,6 +59,7 @@ $fluid-options-map: (
 
 // -- Mapping with Types --
 $unit-types: map-keys(n-units(0)) !default;
+$bool-types: true false;
 @function fluid-types() {
   $fluid-types: (
 //  Global Name. Types.
@@ -66,6 +70,7 @@ $unit-types: map-keys(n-units(0)) !default;
     max:         join(null, $unit-types),
     limit:       size break,
     breakunit:   $unit-types,
+    class:       $bool-types,
 
     // Unit Converter
     root-size:   $unit-types,
