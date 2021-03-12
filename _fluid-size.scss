@@ -315,10 +315,8 @@ $FIRST-BREAK: 0px     !default;
       }
     }
   }
-  @include media(">=#{$now-break}") {
-    @include fluid-class-media($class) {
-      #{$property}: $fluid-sizes;
-    }
+  @include fluid-class-media($class, $now-break) {
+    #{$property}: $fluid-sizes;
   }
 
   // add-break: increase => subtitution, decrease => create fluid-size(max, next-size)
@@ -355,10 +353,8 @@ $FIRST-BREAK: 0px     !default;
         $fluid-sizes: replace-size($fluid-sizes, $now-index, $subtitue-size);
 
         @if $last or $fluid-sizes != $prev-fluid-sizes {
-          @include media(">=#{$now-limit}") {
-            @include fluid-class-media($class) {
-              #{$property}: $fluid-sizes;
-            }
+          @include fluid-class-media($class, $now-limit) {
+            #{$property}: $fluid-sizes;
           }
         }
       }
@@ -374,10 +370,8 @@ $FIRST-BREAK: 0px     !default;
   $sorted-index: null;
   @if (not $exist-sub) and (not $exist-add) {
     //all pass
-    @include media(">=#{$now-break}") {
-      @include fluid-class-media($class) {
-        #{$property}: $fluid-sizes;
-      }
+    @include fluid-class-media($class, $now-break) {
+      #{$property}: $fluid-sizes;
     }
   }
   @else {
@@ -389,15 +383,11 @@ $FIRST-BREAK: 0px     !default;
     @each $i in range($limit-breaks) {
       $index: nth($sorted-index, $i);
       @if nth($limit-types, $index) == 'substitution' {
-        @include fluid-class-media($class) {
-          $fluid-sizes: replace-size($fluid-sizes, $index, $max-size);
-        }
+        $fluid-sizes: replace-size($fluid-sizes, $index, $max-size);
       }
     }
-    @include media(">=#{$now-break}") {
-      @include fluid-class-media($class) {
-        #{$property}: $fluid-sizes;
-      }
+    @include fluid-class-media($class, $now-break) {
+      #{$property}: $fluid-sizes;
     }
   }
 
@@ -417,15 +407,19 @@ $FIRST-BREAK: 0px     !default;
 }
 
 // -- Option::Class ------------------------------------------------------------
-@mixin fluid-class-media($fls-class) {
+@mixin fluid-class-media($fls-class, $break) {
   @if $fls-class == true {
-    .fluid-class &,
-    &.fluid-class {
-      @content;
+    @include media(">=#{$break}") {
+      .fluid-class &,
+      &.fluid-class {
+        @content;
+      }
     }
   }
   @else {
-    @content;
+    @include media(">=#{$break}") {
+      @content;
+    }
   }
 }
 
@@ -510,19 +504,15 @@ $FIRST-BREAK: 0px     !default;
   }
   @else if $not-continuous {
     $now-values: if(not $is-fit, $fluid-sizes, $now-sizes);
-    @include media(">=#{$now-break}") {
-      @include fluid-class-media($class) {
-        #{$property}: $now-values;
-      }
+    @include fluid-class-media($class, $now-break) {
+      #{$property}: $now-values;
     }
 
     // Last at fit, vw-only mode
     $next-values: if($is-fit, $next-sizes, vw-sizes($next-sizes, $next-break));
     @if not $is-fluid and $is-last and $now-sizes != $next-sizes {
-      @include media(">=#{$next-break}") {
-        @include fluid-class-media($class) {
-          #{$property}: $next-values;
-        }
+      @include fluid-class-media($class, $next-break) {
+        #{$property}: $next-values;
       }
     }
   }
