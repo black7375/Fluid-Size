@@ -216,3 +216,6 @@ source: [Legibility: how to make text convenient to read](https://uxdesign.cc/le
 - [CSS3 Media Queries](https://caniuse.com/#feat=css-mediaqueries)
 - [`vw` unit](https://caniuse.com/#feat=mdn-css_types_length_vw)([Viewport units](https://caniuse.com/#feat=viewport-units))
 - [`calc()`](https://caniuse.com/#feat=calc)
+
+## F&A
+- CSS decimal place: [Are the decimal places in a CSS width respected?](https://stackoverflow.com/questions/4308989/are-the-decimal-places-in-a-css-width-respected)
