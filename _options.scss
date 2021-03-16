@@ -1,14 +1,18 @@
 // @import '~sass-unitconverter/unitconverter';
 // @import 'utils';
+// @import 'break-points';
 
 // ** Options ******************************************************************
 // == Global Options ===========================================================
-$fls-mode:  fluid !default; // fluid or fit, vw-only
-$fls-device:  min !default; // min   or max, devices's key(Ex. phone, tablet, ...)
-$fls-unit:   each !default; // each  or units(Ex. px, em, rem, ...)
-$fls-min:    null !default; // null  or length(Ex. 20px, 20pt, ...)
-$fls-max:    null !default; // null  or length(Ex. 20px, 20pt, ...)
-$fls-limit:  size !default; // size  or break
+$fls-mode:   fluid !default; // fluid or fit, vw-only
+$fls-device:   min !default; // min   or max, devices's key(Ex. phone, tablet, ...)
+$fls-unit:    each !default; // each  or units(Ex. px, em, rem, ...)
+$fls-breakunit: px !default; // units(Ex. px, em, rem, ...)
+$fls-min:     null !default; // null  or length(Ex. 20px, 20pt, ...)
+$fls-max:     null !default; // null  or length(Ex. 20px, 20pt, ...)
+$fls-limit:   size !default; // size  or break
+$fls-class:  false !default; // false or true
+$fls-safari-iframe-fix: false !default; // false or true
 
 // == Mapping ==================================================================
 // -- Mapping with API Name --
@@ -18,9 +22,16 @@ $fls-limit:  size !default; // size  or break
     mode:        $fls-mode,
     device:      $fls-device,
     unit:        $fls-unit,
+    breakunit:   $fls-breakunit,
     min:         $fls-min,
     max:         $fls-max,
     limit:       $fls-limit,
+    class:       $fls-class,
+    iframe-fix:  $fls-safari-iframe-fix,
+
+    // Unit Converter
+    root-size:   $root-font-size,
+    base-size:   $base-font-size,
   );
   @return $global-options;
 }
@@ -31,24 +42,45 @@ $fluid-options-map: (
    mode:        mode,
    device:      device,
    unit:        unit,
+   breakunit:   breakunit,
    min:         min,
    min-size:    min,
    max:         max,
    max-size:    max,
    limit:       limit,
+   class:       class,
+   iframe:      iframe-fix,
+   iframe-fix:  iframe-fix,
+   safari-iframe-fix: iframe-fix,
+
+   // Unit Converter
+   root:        root-size,
+   root-size:   root-size,
+   size-root:   root-size,
+   base:        base-size,
+   base-size:   base-size,
+   size-base:   base-size,
 );
 
 // -- Mapping with Types --
 $unit-types: map-keys(n-units(0)) !default;
+$bool-types: true false;
 @function fluid-types() {
   $fluid-types: (
 //  Global Name. Types.
     mode:        fluid fit vw-only,
     device:      join(min max, map-keys($breakpoints)),
     unit:        join(each, $unit-types),
+    breakunit:   $unit-types,
     min:         join(null, $unit-types),
     max:         join(null, $unit-types),
     limit:       size break,
+    class:       $bool-types,
+    iframe-fix:  $bool-types,
+
+    // Unit Converter
+    root-size:   $unit-types,
+    base-size:   $unit-types,
   );
   @return $fluid-types;
 }
@@ -171,6 +203,11 @@ $CACHED-FLUID-TYPES:    fluid-types()      !default;
       // Case min or max
       @if contain('min' 'max', $all-options-key) {
         $option-value: if(is-null($option-value), $option-value, get-unit($option-value));
+      }
+
+      // Case root-size or base-size
+      @if contain('root-size' 'base-size', $all-options-key) {
+        $option-value: get-unit($option-value);
       }
 
       // Case not contain in types

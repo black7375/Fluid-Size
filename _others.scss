@@ -1,6 +1,8 @@
 // ** Others *******************************************************************
-
+// -- Body Width Fix --
 // Account for difference between 100vw and 100% when scroll bars are included on page.
+// Center and trims the offset caused in most browsers by scroll bars when true
+// https://github.com/jdillick/fluid-typography#vw-quirks--fixes
 @mixin body-width-fix() {
   @media screen {
     width: 100vw;
@@ -9,7 +11,20 @@
   }
 }
 
+$CACHED-BODY-WIDTH-FIX: false !default; // Don't change it!!
+@mixin fluid-width-fix($is-width-fix) {
+  @if $is-width-fix and not $CACHED-BODY-WIDTH-FIX {
+    $CACHED-BODY-WIDTH-FIX: true !global; // Only 1 apply
+
+    html {
+      @include body-width-fix();
+    }
+  }
+}
+
+// -- Body Width Fix --
 // Safari doesn't resize its values in an iframe if the iframe is resized.
+// https://github.com/twbs/rfs#class-boolean
 @mixin safari-iframe-resize-fix() {
   min-width: 0vw;
 }
