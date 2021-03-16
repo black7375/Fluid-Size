@@ -12,6 +12,7 @@ $fls-min:     null !default; // null  or length(Ex. 20px, 20pt, ...)
 $fls-max:     null !default; // null  or length(Ex. 20px, 20pt, ...)
 $fls-limit:   size !default; // size  or break
 $fls-class:  false !default; // false or true
+$fls-safari-iframe-fix: false !default; // false or true
 
 // == Mapping ==================================================================
 // -- Mapping with API Name --
@@ -26,6 +27,7 @@ $fls-class:  false !default; // false or true
     max:         $fls-max,
     limit:       $fls-limit,
     class:       $fls-class,
+    iframe-fix:  $fls-safari-iframe-fix,
 
     // Unit Converter
     root-size:   $root-font-size,
@@ -47,6 +49,9 @@ $fluid-options-map: (
    max-size:    max,
    limit:       limit,
    class:       class,
+   iframe:      iframe-fix,
+   iframe-fix:  iframe-fix,
+   safari-iframe-fix: iframe-fix,
 
    // Unit Converter
    root:        root-size,
@@ -71,6 +76,7 @@ $bool-types: true false;
     max:         join(null, $unit-types),
     limit:       size break,
     class:       $bool-types,
+    iframe-fix:  $bool-types,
 
     // Unit Converter
     root-size:   $unit-types,
