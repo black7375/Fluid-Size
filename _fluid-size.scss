@@ -303,7 +303,7 @@ $FIRST-BREAK: 0px     !default;
 // -- Limit --
 @mixin fluid-add-break($property,  $next-sizes, $fluid-sizes,  $max-size,
                        $now-break, $next-break, $limit-breaks, $limit-types,
-                       $sorted-index, $increase, $class, $is-iframe) {
+                       $class, $is-iframe, $sorted-index, $increase) {
   $decrease: not $increase;
 
   // now-break: increase => pass, decrease => subtitution
@@ -402,7 +402,7 @@ $FIRST-BREAK: 0px     !default;
     // decrease => now-break(subtitution), add-break(create fluide-size)
     @include fluid-add-break($property,  $next-sizes, $fluid-sizes,  $max-size,
                              $now-break, $next-break, $limit-breaks, $limit-types,
-                             $sorted-index, $increase, $class, $is-iframe);
+                             $class, $is-iframe, $sorted-index, $increase);
   }
 }
 
@@ -453,10 +453,10 @@ $FIRST-BREAK: 0px     !default;
   $prev-sizes: if(is-null($prev-key), null, map-get($fit-sizes, $prev-key));
 
   // Apply Options
-  $is-fit:   $fluid-mode == 'fit';
-  $is-fluid: $fluid-mode == 'fluid';
-  $is-vw:    $fluid-mode == 'vw-only';
-  $is-last:  if($is-fluid, $now-key == $last-key, $next-key == $last-key);
+  $is-fit:    $fluid-mode == 'fit';
+  $is-fluid:  $fluid-mode == 'fluid';
+  $is-vw:     $fluid-mode == 'vw-only';
+  $is-last:   if($is-fluid, $now-key == $last-key, $next-key == $last-key);
   $is-iframe: (not $is-fit) and $iframe-fix;
 
   @if (not is-null($min-size) or not is-null($max-size)) and
@@ -474,9 +474,9 @@ $FIRST-BREAK: 0px     !default;
                       fluid-limit-breaks($now-sizes,  $next-sizes, $max-size,
                                          $now-break, $next-break),
                       vw-limit-breaks($now-sizes, $max-size, $now-break, $next-break));
-    $limit-types:  fluid-limit-types($now-key, $last-key, $now-break, $next-break,
-                                     $limit-breaks, $limit);
-    $max-size:  to-unit-data($max-size,  $fluid-unit);
+    $limit-types: fluid-limit-types($now-key, $last-key, $now-break, $next-break,
+                                    $limit-breaks, $limit);
+    $max-size: to-unit-data($max-size, $fluid-unit);
   }
 
   // Set size
