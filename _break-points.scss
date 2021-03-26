@@ -1,10 +1,12 @@
 // @import 'utils';
 
 // ** Break Points *************************************************************
-$phone-width:       360px !default;
-$phone-height:      640px !default;
-$high-phone-width:  414px !default;
-$high-phone-height: 896px !default;
+$small-phone-width:  320px !default;
+$small-phone-height: 586px !default;
+$phone-width:        360px !default;
+$phone-height:       640px !default;
+$high-phone-width:   414px !default;
+$high-phone-height:  896px !default;
 
 $tablet-width:        768px !default;
 $tablet-height:      1024px !default;
@@ -22,6 +24,7 @@ $high-desktop-width:  3840px !default;
 $high-desktop-height: 2160px !default;
 
 $breakpoints: (        // px
+  small-phone:  $small-phone-width,
   phone:        $phone-width,
   high-phone:   $high-phone-width,
   tablet:       $tablet-width,
@@ -33,6 +36,7 @@ $breakpoints: (        // px
 ) !default;
 
 $breakpoints-height: ( // px
+  small-phone:  $small-phone-height,
   phone:        $phone-height,
   high-phone:   $high-phone-height,
   tablet:       $tablet-height,
@@ -44,6 +48,7 @@ $breakpoints-height: ( // px
 ) !default;
 
 $screen-sizes: (       // inch
+  small-phone:  4,
   phone:        4.7,
   high-phone:   5.8,
   tablet:       9.7,
@@ -55,6 +60,7 @@ $screen-sizes: (       // inch
 ) !default;
 
 $screen-distances: (   // 10cm
+  small-phone:  3,
   phone:        3,
   high-phone:   3,
   tablet:       4,
@@ -66,6 +72,7 @@ $screen-distances: (   // 10cm
 ) !default;
 
 // Alias
+$small-phone:  $small-phone-width   !default;
 $phone:        $phone-width        !default;
 $high-phone:   $high-phone-width   !default;
 $tablet:       $tablet-width       !default;
